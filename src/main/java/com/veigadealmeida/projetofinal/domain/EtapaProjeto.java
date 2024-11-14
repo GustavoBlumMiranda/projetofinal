@@ -8,24 +8,26 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = true)
-@Table(name = "etapa_template_projeto")
-@Entity(name="EtapaTemplateProjeto")
-public class EtapaTemplateProjeto extends BaseEntity{
+@Table(name = "EtapaProjeto")
+@Entity(name="EtapaProjeto")
+public class EtapaProjeto extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "etapa_id")
+    @JoinColumn(name = "etapaId")
     private Etapa etapa;
 
     @ManyToOne
-    @JoinColumn(name = "template_projeto_id")
-    private TemplateProjeto templateProjeto;
+    @JoinColumn(name = "projetoId")
+    private Projeto projeto;
 
     private Integer ordemEtapa;
+    private String justificativa;
 
-    public EtapaTemplateProjeto(EtapaTemplateProjetoDTO etapaTemplateProjetoDTO){
+
+    public EtapaProjeto(EtapaTemplateProjetoDTO etapaTemplateProjetoDTO){
         this.ordemEtapa = etapaTemplateProjetoDTO.ordemEtapa();
     }
 

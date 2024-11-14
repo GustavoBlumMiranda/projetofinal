@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class OpcaoRespostaService {
 
-    private final OpcaoRespostaRepository opcaoRespostaRepository;
+    /*private final OpcaoRespostaRepository opcaoRespostaRepository;
     private final PerguntaRepository perguntaRepository;
 
     public OpcaoRespostaService(OpcaoRespostaRepository opcaoRespostaRepository, PerguntaRepository perguntaRepository){
@@ -66,6 +66,6 @@ public class OpcaoRespostaService {
         opcaoResposta.setProximaPergunta(perguntaRepository.getReferenceById(opcaoRespostaDTO.proximaPerguntaId()));
         opcaoResposta = opcaoRespostaRepository.save(opcaoResposta);
         return new OpcaoRespostaDetalhamentoDTO(opcaoResposta);
-    }
+    }*/
 
 }

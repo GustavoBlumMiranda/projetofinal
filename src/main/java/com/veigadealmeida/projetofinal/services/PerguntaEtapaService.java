@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PerguntaEtapaService {
 
-    private PerguntaEtapaRepository perguntaEtapaRepository;
+   /* private PerguntaEtapaRepository perguntaEtapaRepository;
     private EtapaRepository etapaRepository;
     private PerguntaRepository perguntaRepository;
 
@@ -37,6 +37,6 @@ public class PerguntaEtapaService {
         perguntaEtapa.setEtapa(etapa);
         perguntaEtapa = perguntaEtapaRepository.save(perguntaEtapa);
         return new PerguntaEtapaDetalhamentoDTO(perguntaEtapa);
-    }
+    }*/
 
 }

@@ -23,13 +23,13 @@ public class PerguntaEtapaController {
 
     }
 
-    @PostMapping("/associar")
+   /* @PostMapping("/associar")
     @Transactional
     @Operation(summary = "Associação Pergunta > Etapa", description = "Realiza associação de Perguntas a Etapas (tabela pergunta_etapa)", tags = {"PerguntaEtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<PerguntaEtapaDetalhamentoDTO> associaPerguntaEtapa(@RequestBody @Valid AssociaPerguntaEtapaDTO associaPerguntaEtapaDTO, UriComponentsBuilder uriComponentsBuilder){
         PerguntaEtapaDetalhamentoDTO perguntaEtapaDetalhamentoDTO = perguntaEtapaService.associaPerguntaEtapa(associaPerguntaEtapaDTO);
         var uri = uriComponentsBuilder.path("/perguntaetapa/associar/{id}").buildAndExpand(perguntaEtapaDetalhamentoDTO.id()).toUri();
         return ResponseEntity.created(uri).body(perguntaEtapaDetalhamentoDTO);
-    }
+    }*/
 
 }

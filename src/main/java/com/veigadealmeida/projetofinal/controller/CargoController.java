@@ -1,7 +1,7 @@
 package com.veigadealmeida.projetofinal.controller;
 
-import com.veigadealmeida.projetofinal.dto.cargo.CargoDTO;
-import com.veigadealmeida.projetofinal.dto.cargo.CargoDetalhamentoDTO;
+import com.veigadealmeida.projetofinal.dto.grupo.GrupoDTO;
+import com.veigadealmeida.projetofinal.dto.grupo.GrupoDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.services.CargoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,13 +22,13 @@ public class CargoController {
         this.cargoService = cargoService;
     }
 
-    @PostMapping("/cadastrar")
+    /*@PostMapping("/cadastrar")
     @Transactional
     @Operation(summary = "Cadastro do cargo", description = "Realiza o cadastro do cargo", tags = {"CargoController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<CargoDetalhamentoDTO> cadastrarCargo(@RequestBody @Valid CargoDTO cargoDTO, UriComponentsBuilder uriComponentsBuilder){
-        CargoDetalhamentoDTO cargoDetalhamentoDTO = cargoService.cadastrarCargo(cargoDTO);
-        var uri = uriComponentsBuilder.path("/cargo/cadastrar/{id}").buildAndExpand(cargoDetalhamentoDTO.id()).toUri();
-        return ResponseEntity.created(uri).body(cargoDetalhamentoDTO);
-    }
+    public ResponseEntity<GrupoDetalhamentoDTO> cadastrarCargo(@RequestBody @Valid GrupoDTO grupoDTO, UriComponentsBuilder uriComponentsBuilder){
+        GrupoDetalhamentoDTO grupoDetalhamentoDTO = cargoService.cadastrarCargo(grupoDTO);
+        var uri = uriComponentsBuilder.path("/cargo/cadastrar/{id}").buildAndExpand(grupoDetalhamentoDTO.id()).toUri();
+        return ResponseEntity.created(uri).body(grupoDetalhamentoDTO);
+    }*/
 
 }

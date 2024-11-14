@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/opcaoresposta")
 public class OpcaoRespostaController {
 
-    private final OpcaoRespostaRepository opcaoRespostaRepository;
+   /* private final OpcaoRespostaRepository opcaoRespostaRepository;
     private final PerguntaRepository perguntaRepository;
     private final OpcaoRespostaService opcaoRespostaService;
 
@@ -33,6 +33,6 @@ public class OpcaoRespostaController {
         OpcaoRespostaDetalhamentoDTO opcaoRespostaDetalhamentoDTO = opcaoRespostaService.cadastrarOpcaoResposta(opcaoRespostaDTO);
         var uri = uriComponentsBuilder.path("/usuario/cadastrar/{id}").buildAndExpand(opcaoRespostaDetalhamentoDTO.id()).toUri();
         return ResponseEntity.created(uri).body(opcaoRespostaDetalhamentoDTO);
-    }
+    }*/
 
 }

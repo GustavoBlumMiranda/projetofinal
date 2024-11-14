@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = true)
-@Table(name = "opcao_resposta")
+@Table(name = "OpcaoResposta")
 @Entity(name="OpcaoResposta")
 public class OpcaoResposta extends BaseEntity {
 
@@ -20,15 +20,12 @@ public class OpcaoResposta extends BaseEntity {
     private String resposta;
 
     @ManyToOne
-    @JoinColumn(name = "proxima_pergunta_id")
-    private Pergunta proximaPergunta;
-
-    @ManyToOne
-    @JoinColumn(name = "pergunta_id")
+    @JoinColumn(name = "perguntaId")
     private Pergunta pergunta;
 
-    public OpcaoResposta(OpcaoRespostaDTO opcaoRespostaDTO){
+    public OpcaoResposta(OpcaoRespostaDTO opcaoRespostaDTO, Pergunta pergunta) {
         this.resposta = opcaoRespostaDTO.opcaoResposta();
+        this.pergunta = pergunta;
     }
 
 }

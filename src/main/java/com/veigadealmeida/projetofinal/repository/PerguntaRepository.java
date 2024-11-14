@@ -11,9 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface PerguntaRepository extends JpaRepository<Pergunta, Long> {
-    Optional<Pergunta> findByIdAndAtivo(Long id, Boolean ativo);
+    //Optional<Pergunta> findById(Long id);
     Page<Pergunta> findAll(Pageable paginacao);
-    Long countByAtivo(Boolean ativo);
-    List<Pergunta> findByIdIn(List<Long> idPerguntas);
 
 }

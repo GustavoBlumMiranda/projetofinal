@@ -23,8 +23,6 @@ public class Etapa extends BaseEntity{
 
     private Boolean ativo;
 
-    private String justificativa;
-
     public Etapa(EtapaTemplateDTO etapaTemplateDTO){
         this.titulo = etapaTemplateDTO.titulo();
         this.ativo = etapaTemplateDTO.ativo();
@@ -32,7 +30,6 @@ public class Etapa extends BaseEntity{
 
     public void ativarOuDesativarEtapa(AtivarOuDesativarEtapaDTO ativarOuDesativarEtapaDTO, Boolean ativar){
         this.ativo = ativar;
-        this.justificativa = ativarOuDesativarEtapaDTO.justificativa();
     }
 
     public void editarTituloEtapa(EditarTituloEtapaDTO editarTituloEtapaDTO){

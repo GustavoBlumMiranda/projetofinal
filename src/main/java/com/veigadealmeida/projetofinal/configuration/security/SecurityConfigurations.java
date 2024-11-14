@@ -36,7 +36,6 @@ public class SecurityConfigurations {
                     .requestMatchers(HttpMethod.GET, "/resetsenha/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/usuario/buscarusuariologado").hasAnyAuthority("dev", "gestor", "cordenador", "administrador", "tecnico")
                     .requestMatchers("/usuario/**").hasAnyAuthority("dev", "gestor", "administrador")
-                    .requestMatchers("/cabecalho/**").hasAnyAuthority("dev", "gestor", "cordenador")
                     .requestMatchers(HttpMethod.POST, "/cargo/cadastrar").hasAnyAuthority("dev", "administrador", "gestor")
                     .requestMatchers("/etapa/**").hasAnyAuthority("dev", "gestor", "cordenador")
                     .requestMatchers("/etapatemplateprojeto/**").hasAnyAuthority("dev", "gestor", "cordenador")

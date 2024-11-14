@@ -1,6 +1,5 @@
 package com.veigadealmeida.projetofinal.controller;
 
-import com.veigadealmeida.projetofinal.domain.RespostasProjeto;
 import com.veigadealmeida.projetofinal.dto.respostasprojeto.*;
 import com.veigadealmeida.projetofinal.services.RespostasProjetoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +18,7 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/respostasprojeto")
 public class RespostasProjetoController {
-    private final RespostasProjetoService respostasProjetoService;
+    /*private final RespostasProjetoService respostasProjetoService;
 
     public RespostasProjetoController(RespostasProjetoService respostasProjetoService){
         this.respostasProjetoService = respostasProjetoService;
@@ -38,9 +37,9 @@ public class RespostasProjetoController {
     public ResponseEntity<Page<RespostasProjetoDetalhamentoDTO>> listarRespostasProjeto(@PageableDefault(sort = {"id"}) Pageable paginacao){
         var page = respostasProjetoService.listarRespostasProjeto(paginacao);
         return ResponseEntity.ok(page);
-    }
+    }*/
 
-    @PutMapping("/aprovar/{id}")
+    /*@PutMapping("/aprovar/{id}")
     @Operation(summary = "Aprovação da Respostas Projetos", description = "Realiza a aprovação de uma resposta dentro de um projeto", tags = {"RespostaProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<RespostasProjetoDetalhamentoDTO> aprovarRespostasProjeto(@PathVariable Long id){
         RespostasProjeto respostasProjeto = respostasProjetoService.alteraSituacapResposta(id, true);
@@ -72,5 +71,5 @@ public class RespostasProjetoController {
     @Operation(summary = "Reprovação da Respostas Projetos", description = "Altera a resposta de um projeto", tags = {"RespostaProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<RespostasProjetoDetalhamentoDTO> reprovarRespostasProjeto(@RequestBody AlterarRespostasProjetoDTO alterarRespostasProjetoDTO){
         return ResponseEntity.ok(new RespostasProjetoDetalhamentoDTO(respostasProjetoService.alteraResposta(alterarRespostasProjetoDTO)));
-    }
+    }*/
 }

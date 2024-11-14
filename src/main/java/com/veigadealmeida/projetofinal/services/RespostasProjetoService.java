@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RespostasProjetoService {
-    private final RespostasProjetoRepository respostasProjetoRepository;
+    /*private final RespostasProjetoRepository respostasProjetoRepository;
     private final ProjetoRepository projetoRepository;
     private final EtapaRepository etapaRepository;
     private final UsuarioRepository usuarioRepository;
@@ -46,7 +46,7 @@ public class RespostasProjetoService {
 
     @Transactional
     public RespostasProjetoDetalhamentoDTO cadastrarRespostasProjeto(RespostasProjetoDTO respostasProjetoDTO) {
-        RespostasProjeto  respostasProjeto = new RespostasProjeto(respostasProjetoDTO);
+       *//* RespostasProjeto  respostasProjeto = new RespostasProjeto(respostasProjetoDTO);
         respostasProjeto.setProjeto(projetoRepository.findById(respostasProjetoDTO.idProjeto()).orElseThrow(() -> new ObjectNotFoundException("Projeto com id fornecido não encontrada: " + respostasProjetoDTO.idProjeto())));
         respostasProjeto.setEtapa(etapaRepository.findById(respostasProjetoDTO.idEtapa()).orElseThrow(() -> new ObjectNotFoundException("Etapa com id fornecido não encontrada: " + respostasProjetoDTO.idEtapa())));
         respostasProjeto.setUsuario(usuarioRepository.findById(respostasProjetoDTO.idUsuario()).orElseThrow(() -> new ObjectNotFoundException("Usuario com id fornecido não encontrada: " + respostasProjetoDTO.idUsuario())));
@@ -60,22 +60,23 @@ public class RespostasProjetoService {
         iniciaEtapaEProjeto(respostasProjeto);
         respostasProjeto.setCadastro(respostasProjeto);
         respostasProjeto = respostasProjetoRepository.save(respostasProjeto);
-        return new RespostasProjetoDetalhamentoDTO(respostasProjeto);
+        return new RespostasProjetoDetalhamentoDTO(respostasProjeto);*//*
+        return null;
     }
 
-    @Transactional
+    *//*@Transactional
     public RespostasProjeto alteraSituacapResposta(Long idRespostaProjeto, Boolean aprovada) {
         RespostasProjeto respostasProjeto = respostasProjetoRepository.findById(idRespostaProjeto).orElseThrow(() -> new ObjectNotFoundException("RespostaProjeto com id fornecido não encontrada: " + idRespostaProjeto));
         respostasProjeto.setAprovada(aprovada);
         return respostasProjeto;
-    }
+    }*//*
 
     public Page<RespostasProjetoDetalhamentoDTO> listarRespostasProjeto(Pageable paginacao) {
         return respostasProjetoRepository.findAll(paginacao).map(RespostasProjetoDetalhamentoDTO::new);
     }
 
     public List<RespostasPreenchidasENaoPreenchidasDTO> listarRespostasPreenchidaseVazias(Long idStatusEtapaProjeto) {
-        StatusEtapaProjeto statusEtapaProjeto = statusEtapaProjetoRepository.findById(idStatusEtapaProjeto).orElseThrow(() -> new ObjectNotFoundException("StatusEtapaProjeto com id fornecido não encontrada: " + idStatusEtapaProjeto));
+        *//*StatusEtapaProjeto statusEtapaProjeto = statusEtapaProjetoRepository.findById(idStatusEtapaProjeto).orElseThrow(() -> new ObjectNotFoundException("StatusEtapaProjeto com id fornecido não encontrada: " + idStatusEtapaProjeto));
         List<PerguntaEtapa> perguntaEtapaList = perguntaEtapaRepository.findAllByEtapa(statusEtapaProjeto.getEtapa());
 
         List<RespostasPreenchidasENaoPreenchidasDTO> listaRespostasPreenchidasENaoPreenchidasDTO = new ArrayList<>();
@@ -95,11 +96,13 @@ public class RespostasProjetoService {
                 listaRespostasPreenchidasENaoPreenchidasDTO.add(new RespostasPreenchidasENaoPreenchidasDTO(perguntaEtapa, new RespostasProjeto(), opcoesRespostaDTO));
             }
         }
-        return listaRespostasPreenchidasENaoPreenchidasDTO;
+        return listaRespostasPreenchidasENaoPreenchidasDTO;*//*
+        return null;
+
     }
 
     public ContagemPerguntasDTO contarPerguntas(){
-        Long total = 0L;
+        *//*Long total = 0L;
         Long naoRespondida = 0L;
         Long pendente = 0L;
         Long aprovada = 0L;
@@ -110,11 +113,13 @@ public class RespostasProjetoService {
         pendente = respostasProjetoRepository.countByAprovada(null);
         naoRespondida = total - aprovada - reprovada - pendente;
         ContagemPerguntasDTO contagemPerguntasDTO = new ContagemPerguntasDTO(total, naoRespondida, pendente, aprovada, reprovada);
-        return contagemPerguntasDTO;
+        return contagemPerguntasDTO;*//*
+        return null;
+
     }
 
 
-    @Transactional
+    *//*@Transactional
     public void atualizaSituacaoEtapa(RespostasProjeto respostasProjeto) {
         //verifica se todas as respostas da etapa foram aprovadas
         List<PerguntaEtapa> perguntaEtapaList = perguntaEtapaRepository.findAllByEtapa(respostasProjeto.getEtapa());
@@ -137,10 +142,10 @@ public class RespostasProjetoService {
                 atualizarStatusProjeto(projeto);
             }
         }
-    }
+    }*//*
 
     private boolean todasRespostasAprovadas(List<PerguntaEtapa> perguntaEtapaList, Projeto projeto) {
-        Boolean aprovada = true;
+        *//*Boolean aprovada = true;
         for(PerguntaEtapa perguntaEtapa : perguntaEtapaList){
             Optional<RespostasProjeto> respostasProjeto = respostasProjetoRepository.findByPerguntaAndEtapaAndProjeto(perguntaEtapa.getPergunta(),
                     perguntaEtapa.getEtapa(), projeto);
@@ -154,19 +159,21 @@ public class RespostasProjetoService {
                 break;
             }
         }
-        return aprovada;
+        return aprovada;*//*
+        return true;
+
     }
 
-    private StatusEtapaProjeto atualizarStatusEtapaProjeto(StatusEtapaProjeto statusEtapaProjeto) {
+    *//*private StatusEtapaProjeto atualizarStatusEtapaProjeto(StatusEtapaProjeto statusEtapaProjeto) {
         statusEtapaProjeto.setStatusEtapa(statusEtapaRepository.findById(3L)
                 .orElseThrow(() -> new EntityNotFoundException("StatusEtapa not found")));
         statusEtapaProjeto.setDatafim(new Date());
         statusEtapaProjeto.setUpdate(statusEtapaProjeto);
         statusEtapaProjeto = statusEtapaProjetoRepository.save(statusEtapaProjeto);
         return statusEtapaProjeto;
-    }
+    }*//*
 
-    private boolean todasEtapasConcluidas(List<StatusEtapaProjeto> statusEtapaProjetoList) {
+    *//*private boolean todasEtapasConcluidas(List<StatusEtapaProjeto> statusEtapaProjetoList) {
         return statusEtapaProjetoList.stream()
                 .allMatch(stp -> stp.getStatusEtapa().getId() == 3L);
     }
@@ -218,7 +225,7 @@ public class RespostasProjetoService {
             statusEtapaProjeto.getProjeto().setDataInicio(new Date());
             projetoRepository.save(statusEtapaProjeto.getProjeto());
         }
-    }
+    }*/
 
 
 }

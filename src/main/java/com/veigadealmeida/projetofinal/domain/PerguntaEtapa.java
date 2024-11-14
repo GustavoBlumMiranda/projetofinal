@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = true)
-@Table(name = "pergunta_etapa")
+@Table(name = "perguntaEtapa")
 @Entity(name="perguntaetapa")
 public class PerguntaEtapa extends BaseEntity{
 
@@ -18,20 +18,17 @@ public class PerguntaEtapa extends BaseEntity{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "etapa_id")
+    @JoinColumn(name = "etapaId")
     private Etapa etapa;
 
     @ManyToOne
-    @JoinColumn(name = "pergunta_id")
+    @JoinColumn(name = "perguntaId")
     private Pergunta pergunta;
 
     private Integer ordem;
 
-    private Boolean possuiControleFluxo;
-
     public PerguntaEtapa(AssociaPerguntaEtapaDTO perguntaEtapaDTO){
         this.ordem =perguntaEtapaDTO.ordem();
-        this.possuiControleFluxo = perguntaEtapaDTO.possuiControleFluxo();
     }
 
 }

@@ -1,17 +1,9 @@
 package com.veigadealmeida.projetofinal.dto.respostasprojeto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.veigadealmeida.projetofinal.domain.RespostasProjeto;
-import com.veigadealmeida.projetofinal.dto.etapa.EtapaTemplateDetalhamentoDTO;
-import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDetalhamentoDTO;
-import com.veigadealmeida.projetofinal.dto.projeto.ProjetoDetalhamentoDTO;
-import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
-import com.veigadealmeida.projetofinal.dto.opcaoresposta.OpcaoRespostaDetalhamentoDTO;
 
-import java.util.Date;
 
-public record RespostasProjetoDetalhamentoDTO(
-        Long id,
+public record RespostasProjetoDetalhamentoDTO(){}
+        /*Long id,
         ProjetoDetalhamentoDTO projeto,
         EtapaTemplateDetalhamentoDTO etapa,
         UsuarioDetalhamentoDTO usuario,
@@ -42,5 +34,5 @@ public record RespostasProjetoDetalhamentoDTO(
                 respostasProjeto.getUpdatedAt(),
                 respostasProjeto.getVersion()
         );
-    }
-}
+    }*/
+

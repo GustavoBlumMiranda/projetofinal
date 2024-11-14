@@ -2,7 +2,6 @@ package com.veigadealmeida.projetofinal.controller;
 
 
 import com.veigadealmeida.projetofinal.configuration.utils.CreatedResources;
-import com.veigadealmeida.projetofinal.domain.TemplateProjeto;
 import com.veigadealmeida.projetofinal.dto.etapatemplateprojeto.EtapaTemplateProjetoDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.templateprojeto.*;
 import com.veigadealmeida.projetofinal.services.TemplateProjetoService;
@@ -24,7 +23,7 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/templateprojeto")
 public class TemplateProjetoController {
-    private final TemplateProjetoService templateProjetoService;
+    /*private final TemplateProjetoService templateProjetoService;
 
     public TemplateProjetoController(TemplateProjetoService templateProjetoService){
         this.templateProjetoService = templateProjetoService;
@@ -54,12 +53,12 @@ public class TemplateProjetoController {
         return ResponseEntity.created(createdResources.uris().get(0)).body(createdResources);
     }
 
-   @PutMapping("/ativaroudesativar")
+  *//* @PutMapping("/ativaroudesativar")
    @Operation(summary = "Alteração de Estado do TemplateProjeto", description = "Ativa/Desativa um Template de Projeto", tags = {"TemplateProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
    public ResponseEntity ativarOuInativarTemplateProjeto(@RequestBody @Valid AtivarDesativarTemplateProjetoDTO ativarDesativarTemplateProjetoDTO){
         TemplateProjeto templateProjeto = templateProjetoService.ativarInativarTemplateProjeto(ativarDesativarTemplateProjetoDTO);
         return ResponseEntity.ok(new TemplateProjetoDetalhamentoDTO(templateProjeto));
-    }
+    }*//*
 
    @PutMapping("/editar")
    @Operation(summary = "Edição do TemplateProjeto", description = "Permite Edição dos TemplateProjeto", tags = {"TemplateProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
@@ -97,14 +96,14 @@ public class TemplateProjetoController {
        paginacao = Pageable.unpaged();
        var page = templateProjetoService.listarTemplatesProjetos(paginacao);
        return ResponseEntity.ok(page);
-   }
+   }*/
 
-    @GetMapping("/listar/{id}")
+    /*@GetMapping("/listar/{id}")
     @Operation(summary = "Buscar Template de Projeto por Id", description = "Retorna um Template de Projeto baseado no IdTemplateProjeto passado", tags = {"TemplateProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<TemplateProjetoDetalhamentoDTO> buscaTemplateProjetoPorId(@PathVariable(value = "id") long id){
         TemplateProjeto templateProjeto = templateProjetoService.getTemplateProjetoById(id, true);
         TemplateProjetoDetalhamentoDTO templateProjetoDetalhamentoDTO = new TemplateProjetoDetalhamentoDTO(templateProjeto);
         return ResponseEntity.ok(templateProjetoDetalhamentoDTO);
-    }
+    }*/
 
 }

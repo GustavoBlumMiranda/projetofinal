@@ -2,6 +2,7 @@ package com.veigadealmeida.projetofinal.domain;
 
 import com.veigadealmeida.projetofinal.dto.projeto.AlteraProjetoDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.ProjetoDTO;
+import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,30 +28,19 @@ public class Projeto extends BaseEntity{
     private Date dataInicio;
     private Date dataFim;
 
-    @ManyToOne
-    @JoinColumn(name = "status_projeto_id")
-    private StatusProjeto statusProjeto;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "statusProjeto")
+    private StatusEnum statusProjeto;
+
 
     @ManyToOne
-    @JoinColumn(name = "template_projeto_id")
-    private TemplateProjeto templateProjeto;
-
-    private Date dataPrevistaInicio;
-    private Date dataPrevistaFim;
-
-    @ManyToOne
-    @JoinColumn(name = "coordenador_id")
+    @JoinColumn(name = "usuarioCriadorId")
     private Usuario usuario;
-
-    @Transient
-    private Float porcentagemConcluido;
 
     public Projeto(ProjetoDTO projetoDTO){
         this.titulo = projetoDTO.titulo();
         this.dataInicio = projetoDTO.dataInicio();
         this.dataFim = projetoDTO.dataFim();
-        this.dataPrevistaInicio = projetoDTO.dataPrevistaInicio();
-        this.dataPrevistaFim = projetoDTO.dataPrevistaFim();
     }
 
     public Projeto alteraProjeto(Projeto projeto, AlteraProjetoDTO alteraProjetoDTO) {

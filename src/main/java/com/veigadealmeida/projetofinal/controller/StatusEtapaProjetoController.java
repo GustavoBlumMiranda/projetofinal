@@ -1,6 +1,5 @@
 package com.veigadealmeida.projetofinal.controller;
 
-import com.veigadealmeida.projetofinal.dto.etapa.StatusEtapaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.statusetapaprojeto.AssociaTecnicoEtapaDTO;
 import com.veigadealmeida.projetofinal.dto.statusetapaprojeto.ContagemEtapaDTO;
 import com.veigadealmeida.projetofinal.dto.statusetapaprojeto.StatusEtapaProjetoDetalhamentoDTO;
@@ -34,19 +33,19 @@ public class StatusEtapaProjetoController {
         return ResponseEntity.created(uri).body(statusEtapaProjetoDetalhamentoDTO);
     }*/
 
-    @GetMapping("/listar")
+   /* @GetMapping("/listar")
     @Operation(summary = "Listagem dos StatusEtapaProjetos", description = "Realiza a listagem paginada dos status etapa projetos existentes", tags = {"StatusEtapaProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<Page<StatusEtapaProjetoDetalhamentoDTO>> listarStatusEtapaProjeto(@PageableDefault(sort = {"id"}) Pageable paginacao){
         var page = statusEtapaProjetoService.listarStatusEtapaProjeto(paginacao);
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/listastatus")
+    *//*@GetMapping("/listastatus")
     @Operation(summary = "Listagem dos StatusEtapa", description = "Realiza a listagem paginada dos status etapa existentes (tabela status_etapa)", tags = {"StatusEtapaProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<Page<StatusEtapaDetalhamentoDTO>> listarStatusEtapa(@PageableDefault(sort = {"id"}) Pageable paginacao){
         var page = statusEtapaProjetoService.listarStatusEtapa(paginacao);
         return ResponseEntity.ok(page);
-    }
+    }*//*
 
     @GetMapping("/listarporprojeto/{id}")
     @Operation(summary = "Listagem por projeto", description = "Realiza a listagem dos status etapa projetos por projeto definido", tags = {"StatusEtapaProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
@@ -78,6 +77,6 @@ public class StatusEtapaProjetoController {
     @Operation(summary = "Lista por tecnico logado", description = "Lista por tecnico logado", tags = {"StatusEtapaProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<List<StatusEtapaProjetoDetalhamentoDTO>> listarPorTecnicoLogado(){
         return ResponseEntity.ok(statusEtapaProjetoService.listarPorTecnico());
-    }
+    }*/
 
 }

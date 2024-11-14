@@ -2,8 +2,12 @@ package com.veigadealmeida.projetofinal.domain;
 
 
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
+import com.veigadealmeida.projetofinal.enumerators.TipoPerguntaEnum;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Data
@@ -20,18 +24,21 @@ public class Pergunta extends BaseEntity{
 
     private String descricaoPergunta;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo_resposta_id")
-    private TipoResposta tipoResposta;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipoPergunta")
+    private TipoPerguntaEnum tipoPergunta;
 
-    private Long idProximaPergunta;
-
-    private Boolean ativo;
+    @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OpcaoResposta> opcoesResposta = new ArrayList<>();
 
     public Pergunta(PerguntaDTO perguntaDTO){
         this.descricaoPergunta = perguntaDTO.descricaoPergunta();
-        this.idProximaPergunta = perguntaDTO.idProximaPergunta();
-        this.ativo = perguntaDTO.ativo();
+        this.tipoPergunta = TipoPerguntaEnum.valueOf(perguntaDTO.tipoPergunta().toUpperCase());
+        if(tipoPergunta == TipoPerguntaEnum.MULTIPLA_ESCOLHA){
+            this.opcoesResposta = perguntaDTO.opcoesResposta().stream()
+                    .map(opcaoRespostaDTO -> new OpcaoResposta(opcaoRespostaDTO, this))
+                    .toList();
+        }
     }
 
   }

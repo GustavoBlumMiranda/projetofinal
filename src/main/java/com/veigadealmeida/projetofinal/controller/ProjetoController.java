@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/projeto")
 public class ProjetoController {
 
-    private final ProjetoService projetoService;
+    /*private final ProjetoService projetoService;
 
     public ProjetoController(ProjetoService projetoService){
         this.projetoService = projetoService;
@@ -73,6 +73,6 @@ public class ProjetoController {
     @Operation(summary = "Associa coordenador a um projeto", description = "Realiza a associação de um coordenador a um projeto", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<AssociaCoordenadorComProjetoDTO> associarCoordenadorComProjeto(@RequestBody @Valid AssociaCoordenadorComProjetoDTO associaCoordenadorComProjetoDTO){
         return ResponseEntity.ok(projetoService.associaCoordenadorComProjeto(associaCoordenadorComProjetoDTO));
-    }
+    }*/
 
 }

@@ -2,8 +2,6 @@
 package com.veigadealmeida.projetofinal.configuration.security;
 
 
-import com.veigadealmeida.projetofinal.domain.AlterarSenhaToken;
-import com.veigadealmeida.projetofinal.repository.TokenResetSenhaRepository;
 import com.veigadealmeida.projetofinal.repository.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,12 +20,10 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenJWTService tokenJWTService;
     private final UsuarioRepository usuarioRepository;
-    private final TokenResetSenhaRepository tokenResetSenhaRepository;
 
-    public SecurityFilter(TokenJWTService tokenJWTService, UsuarioRepository usuarioRepository, TokenResetSenhaRepository tokenResetSenhaRepository) {
+    public SecurityFilter(TokenJWTService tokenJWTService, UsuarioRepository usuarioRepository) {
         this.tokenJWTService = tokenJWTService;
         this.usuarioRepository = usuarioRepository;
-        this.tokenResetSenhaRepository = tokenResetSenhaRepository;
     }
 
     @Override
@@ -52,13 +48,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         return null;
     }
 
-    public Boolean validaTrocaDeSenha(String token) {
-        final AlterarSenhaToken tokenSenha = tokenResetSenhaRepository.findByToken(token);
-        if(tokenSenha == null || tokenSenha.tokenExpirado(tokenSenha)){
-            return false;
-        }
-        return true;
-    }
 
 }
 

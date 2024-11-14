@@ -3,7 +3,7 @@ package com.veigadealmeida.projetofinal.services;
 import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.BadRequestException;
 import com.veigadealmeida.projetofinal.controller.customexceptions.ObjectNotFoundException;
-import com.veigadealmeida.projetofinal.domain.Cargo;
+import com.veigadealmeida.projetofinal.domain.Grupo;
 import com.veigadealmeida.projetofinal.domain.Usuario;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioAlteraSenhaDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
@@ -71,9 +71,8 @@ public class UsuarioService {
     public UsuarioDetalhamentoDTO cadastrarUsuario(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario(usuarioDTO);
         usuario.setPassword(passwordEncoder.encode(usuarioDTO.password()));
-        Cargo cargo = cargoRepository.findCargoById(usuarioDTO.cargoId()).orElseThrow(() -> new ObjectNotFoundException("Id do cargo não encontrado: " + usuarioDTO.cargoId()));
-        usuario.setCargo(cargo);
-        usuario.setCadastro(usuario);
+        Grupo cargo = cargoRepository.findCargoById(usuarioDTO.cargoId()).orElseThrow(() -> new ObjectNotFoundException("Id do cargo não encontrado: " + usuarioDTO.cargoId()));
+        usuario.setGrupo(cargo);
         usuario = usuarioRepository.save(usuario);
         return new UsuarioDetalhamentoDTO(usuario);
     }
@@ -109,9 +108,8 @@ public class UsuarioService {
     public UsuarioDetalhamentoDTO editarUsuario(UsuarioEditarDTO usuarioEditarDTO){
         Usuario usuario = usuarioRepository.findById(usuarioEditarDTO.id()).orElseThrow(() -> new ObjectNotFoundException("Id do usuário não encontrado: " + usuarioEditarDTO.id()));
         if(usuarioEditarDTO.cargoId() != null){
-            Cargo cargo = cargoRepository.findCargoById(usuarioEditarDTO.cargoId()).orElseThrow(() -> new ObjectNotFoundException("Id do cargo não encontrado: " + usuarioEditarDTO.cargoId()));
-            usuario.setCargo(cargo);
-            usuario.setCargo(cargo);
+            Grupo cargo = cargoRepository.findCargoById(usuarioEditarDTO.cargoId()).orElseThrow(() -> new ObjectNotFoundException("Id do cargo não encontrado: " + usuarioEditarDTO.cargoId()));
+            usuario.setGrupo(cargo);
         }
         this.verificaUsuarioDuplicado(usuarioEditarDTO);
         return new UsuarioDetalhamentoDTO(usuario.atualizaUsuario(usuario, usuarioEditarDTO));

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class TemplateEtapaService {
 
-    private EtapaRepository etapaRepository;
+   /* private EtapaRepository etapaRepository;
     private PerguntaEtapaRepository perguntaEtapaRepository;
     private PerguntaRepository perguntaRepository;
     private EtapaTemplateProjetoRepository etapaTemplateProjetoRepository;
@@ -41,10 +41,10 @@ public class TemplateEtapaService {
         etapa.setCadastro(etapa);
 
         List<Long> idPerguntas = cadastroEtapaTemplateDTO.idPerguntas();
-        /*List<Long> perguntasEmLoop = getPerguntasEmLoop(idPerguntas);
+        *//*List<Long> perguntasEmLoop = getPerguntasEmLoop(idPerguntas);
         if (!perguntasEmLoop.isEmpty()) {
             throw new LoopException("Um loop foi detectado na ordem das perguntas. A operação foi cancelada.");
-        }*/
+        }*//*
 
         etapa = etapaRepository.save(etapa);
 
@@ -112,12 +112,12 @@ public class TemplateEtapaService {
     }
 
     public List<EtapaTemplateDetalhamentoDTO> listaTemplateEtapasPorTemplateProjeto(Long idTemplateProjeto) {
-        List<EtapaTemplateProjeto> listaEtapaTemplateProjeto = etapaTemplateProjetoRepository.findAllByTemplateProjetoId(idTemplateProjeto);
-        List<EtapaTemplateDetalhamentoDTO> etapaTemplateDetalhamentoDTOList = this.toEtapaTemplateDetalhamentoDTOList(listaEtapaTemplateProjeto);
+        List<EtapaProjeto> listaEtapaProjeto = etapaTemplateProjetoRepository.findAllByTemplateProjetoId(idTemplateProjeto);
+        List<EtapaTemplateDetalhamentoDTO> etapaTemplateDetalhamentoDTOList = this.toEtapaTemplateDetalhamentoDTOList(listaEtapaProjeto);
         return etapaTemplateDetalhamentoDTOList;
     }
 
-    public static List<EtapaTemplateDetalhamentoDTO> toEtapaTemplateDetalhamentoDTOList(List<EtapaTemplateProjeto> etapasTemplateProjeto) {
+    public static List<EtapaTemplateDetalhamentoDTO> toEtapaTemplateDetalhamentoDTOList(List<EtapaProjeto> etapasTemplateProjeto) {
         return etapasTemplateProjeto.stream()
                 .map(etapaTemplateProjeto -> new EtapaTemplateDetalhamentoDTO(etapaTemplateProjeto.getEtapa()))
                 .collect(Collectors.toList());
@@ -131,7 +131,7 @@ public class TemplateEtapaService {
         return listaTemplateEtapasPorTemplateProjeto(templateProjeto.getId());
     }
 
-   /* public List<Long> getPerguntasEmLoop(List<Long> idPerguntas) {
+   *//* public List<Long> getPerguntasEmLoop(List<Long> idPerguntas) {
         List<Long> perguntasEmLoop = new ArrayList<>();
         Set<Long> idsVisitados = new HashSet<>();
 

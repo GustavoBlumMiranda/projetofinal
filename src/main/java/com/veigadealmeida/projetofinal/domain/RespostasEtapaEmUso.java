@@ -9,32 +9,28 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = true)
-@Table(name = "respostas_projeto")
-@Entity(name="RespostasProjeto")
-public class RespostasProjeto extends BaseEntity{
+@Table(name = "RespostasEtapaEmUso")
+@Entity(name="RespostasEtapaEmUso")
+public class RespostasEtapaEmUso extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "projeto_id", nullable = false)
-    private Projeto projeto;
+    @JoinColumn(name = "EtapaEmUso", nullable = false)
+    private EtapaEmUso etapaEmUso;
 
     @ManyToOne
-    @JoinColumn(name = "etapa_id", nullable = false)
-    private Etapa etapa;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "UsuarioId", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "pergunta_id", nullable = false)
+    @JoinColumn(name = "perguntaId", nullable = false)
     private Pergunta pergunta;
 
     @ManyToOne
-    @JoinColumn(name = "opcao_resposta_id")
+    @JoinColumn(name = "opcaoRespostaId")
     private OpcaoResposta opcaoResposta;
 
     private String respostaString;
@@ -45,13 +41,13 @@ public class RespostasProjeto extends BaseEntity{
 
     private Boolean aprovada;
 
-    public RespostasProjeto(RespostasProjetoDTO respostasProjetoDTO){
+    public RespostasEtapaEmUso(RespostasProjetoDTO respostasProjetoDTO){
         this.respostaString = respostasProjetoDTO.respostaString();
         this.respostaNumerica = respostasProjetoDTO.respostaNumerica();
         this.respondida = respostasProjetoDTO.respondida();
     }
 
-    public RespostasProjeto AtualizaRespostasProjeto(AlterarRespostasProjetoDTO respostasProjetoDTO, RespostasProjeto respostasProjeto){
+    public RespostasEtapaEmUso AtualizaRespostasProjeto(AlterarRespostasProjetoDTO respostasProjetoDTO, RespostasEtapaEmUso respostasProjeto){
         if(respostasProjetoDTO.respostaString() != null){
             respostasProjeto.setRespostaString(respostasProjetoDTO.respostaString());
         }

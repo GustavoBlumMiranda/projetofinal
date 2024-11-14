@@ -39,7 +39,7 @@ public class EtapaController {
 
     }
 
-    @PostMapping("/template/cadastrar")
+   /* @PostMapping("/template/cadastrar")
     @Operation(summary = "Cadastro do Template Etapa", description = "Realiza o cadastro de um Template de Etapa com uma lista de (ids) Perguntas", tags = {"EtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<CreatedResources<PerguntaEtapaDetalhamentoDTO>> cadastrarTemplateEtapaComListaPergunta(@RequestBody @Valid CadastroEtapaTemplateDTO cadastroEtapaTemplateDTO, UriComponentsBuilder uriComponentsBuilder){
         List<PerguntaEtapaDetalhamentoDTO> listaPerguntaEtapaDetalhamentoDTO = templateEtapaService.cadastrarTemplateEtapaComListaPergunta(cadastroEtapaTemplateDTO);
@@ -96,6 +96,6 @@ public class EtapaController {
     public ResponseEntity<List<EtapaTemplateDetalhamentoDTO>> listarEtapasPorProjeto(@PathVariable  Long id){
         List<EtapaTemplateDetalhamentoDTO> listaEtapaTemplateDetalhamentoDTO  = templateEtapaService.listaTemplateEtapasPorProjeto(id);
         return ResponseEntity.ok(listaEtapaTemplateDetalhamentoDTO);
-    }
+    }*/
 
 }

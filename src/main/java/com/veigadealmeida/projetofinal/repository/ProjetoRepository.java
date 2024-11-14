@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
-    Long countByStatusProjetoId(Long id);
+
 }

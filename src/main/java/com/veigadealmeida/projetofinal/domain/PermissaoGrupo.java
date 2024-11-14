@@ -8,17 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = true)
-@Table(name = "permissao_cargo")
-@Entity(name="PermissaoCargo")
-public class PermissaoCargo extends BaseEntity {
+@Table(name = "PermissaoGrupo")
+@Entity(name="PermissaoGrupo")
+public class PermissaoGrupo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "cargo_id")
-    private Cargo cargo;
 
     private Boolean criarTemplates;
     private Boolean criarPreProjeto;

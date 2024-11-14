@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProjetoService {
 
-    private final ProjetoRepository projetoRepository;
+    /*private final ProjetoRepository projetoRepository;
     private final StatusProjetoRepository statusProjetoRepository;
     private final TemplateProjetoRepository templateProjetoRepository;
     private final StatusEtapaProjetoRepository statusEtapaProjetoRepository;
@@ -51,8 +51,8 @@ public class ProjetoService {
         projeto.setTemplateProjeto(templateProjeto);
         projeto = projetoRepository.save(projeto);
         List<StatusEtapaProjeto> listaStatusEtapaProjetos = new ArrayList<>();
-        List<EtapaTemplateProjeto> etapaTemplateProjetoList = etapaTemplateProjetoRepository.findAllByTemplateProjetoId(projeto.getTemplateProjeto().getId());
-        for (EtapaTemplateProjeto etp : etapaTemplateProjetoList) {
+        List<EtapaProjeto> etapaProjetoList = etapaTemplateProjetoRepository.findAllByTemplateProjetoId(projeto.getTemplateProjeto().getId());
+        for (EtapaProjeto etp : etapaProjetoList) {
             StatusEtapaProjeto statusEtapaProjeto = new StatusEtapaProjeto();
             statusEtapaProjeto.setProjeto(projeto);
             statusEtapaProjeto.setEtapa(etp.getEtapa());
@@ -139,6 +139,6 @@ public class ProjetoService {
 
         projeto.setUsuario(usuario);
         return new AssociaCoordenadorComProjetoDTO(projeto,"Coordenador associado ao projeto com sucesso");
-    }
+    }*/
 
 }

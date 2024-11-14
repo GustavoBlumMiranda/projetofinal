@@ -5,7 +5,7 @@ import com.veigadealmeida.projetofinal.domain.*;
 import com.veigadealmeida.projetofinal.dto.etapatemplateprojeto.EtapaTemplateProjetoDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.templateprojeto.*;
 import com.veigadealmeida.projetofinal.repository.EtapaRepository;
-import com.veigadealmeida.projetofinal.repository.EtapaTemplateProjetoRepository;
+import com.veigadealmeida.projetofinal.repository.EtapaProjetoRepository;
 import com.veigadealmeida.projetofinal.repository.TemplateProjetoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class TemplateProjetoService {
 
-    private final TemplateProjetoRepository templateProjetoRepository;
+    /*private final TemplateProjetoRepository templateProjetoRepository;
     private final EtapaRepository etapaRepository;
     private final EtapaTemplateProjetoRepository etapaTemplateProjetoRepository;
 
@@ -41,22 +41,22 @@ public class TemplateProjetoService {
         TemplateProjeto templateProjeto = new TemplateProjeto(templateProjetoComListaEtapaDTO.templateProjetoDTO());
         templateProjeto.setCadastro(templateProjeto);
         templateProjeto = templateProjetoRepository.save(templateProjeto);
-        List<EtapaTemplateProjeto> etapaTemplateProjetos = new ArrayList<>();
+        List<EtapaProjeto> etapaProjetos = new ArrayList<>();
         int ordem = 0;
         for (Long idEtapa : templateProjetoComListaEtapaDTO.idTemplateEtapa()) {
             ordem++;
-            EtapaTemplateProjeto etapaTemplateProjeto = new EtapaTemplateProjeto();
-            etapaTemplateProjeto.setCadastro(etapaTemplateProjeto);
+            EtapaProjeto etapaProjeto = new EtapaProjeto();
+            etapaProjeto.setCadastro(etapaProjeto);
             Etapa etapa = etapaRepository.findByIdAndAtivo(idEtapa, true);
-            etapaTemplateProjeto.setEtapa(etapa);
-            etapaTemplateProjeto.setTemplateProjeto(templateProjeto);
-            etapaTemplateProjeto.setOrdemEtapa(ordem);
-            etapaTemplateProjetos.add(etapaTemplateProjeto);
+            etapaProjeto.setEtapa(etapa);
+            etapaProjeto.setTemplateProjeto(templateProjeto);
+            etapaProjeto.setOrdemEtapa(ordem);
+            etapaProjetos.add(etapaProjeto);
         }
-        etapaTemplateProjetos = etapaTemplateProjetoRepository.saveAll(etapaTemplateProjetos);
+        etapaProjetos = etapaTemplateProjetoRepository.saveAll(etapaProjetos);
 
         List<EtapaTemplateProjetoDetalhamentoDTO> listaEtapaTemplateProjetoDetalhamentoDTO = new ArrayList<>();
-        for (EtapaTemplateProjeto etp : etapaTemplateProjetos) {
+        for (EtapaProjeto etp : etapaProjetos) {
             listaEtapaTemplateProjetoDetalhamentoDTO.add(new EtapaTemplateProjetoDetalhamentoDTO(etp));
         }
         return listaEtapaTemplateProjetoDetalhamentoDTO;
@@ -91,6 +91,6 @@ public class TemplateProjetoService {
     @Transactional
     public TemplateProjeto getTemplateProjetoById(Long id, Boolean ativo) {
         return templateProjetoRepository.findByIdAndAtivo(id, ativo);
-    }
+    }*/
 
 }

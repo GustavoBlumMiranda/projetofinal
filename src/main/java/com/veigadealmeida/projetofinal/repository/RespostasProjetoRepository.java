@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface RespostasProjetoRepository extends JpaRepository<RespostasProjeto, Long>{
+//@Repository
+public interface RespostasProjetoRepository{
+/*
     Page<RespostasProjeto> findAll(Pageable paginacao);
 
     Page<RespostasProjeto> findAllByUsuario(Pageable paginacao, Usuario usuario);
@@ -19,5 +20,6 @@ public interface RespostasProjetoRepository extends JpaRepository<RespostasProje
     Long countByAprovada(Boolean aprovada);
 
     List<RespostasProjeto> findByEtapaAndProjeto(Etapa etapa, Projeto projeto);
+*/
 
 }

@@ -1,7 +1,7 @@
 package com.veigadealmeida.projetofinal.controller;
 
 
-import com.veigadealmeida.projetofinal.domain.EtapaTemplateProjeto;
+import com.veigadealmeida.projetofinal.domain.EtapaProjeto;
 import com.veigadealmeida.projetofinal.dto.etapatemplateprojeto.AlterarOrdemEtapaTemplateProjetoDTO;
 import com.veigadealmeida.projetofinal.dto.etapatemplateprojeto.EtapaTemplateProjetoDTO;
 import com.veigadealmeida.projetofinal.dto.etapatemplateprojeto.EtapaTemplateProjetoDetalhamentoDTO;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequestMapping("/etapatemplateprojeto")
 public class EtapaTemplateProjetoController {
 
-    private final EtapaTemplateProjetoService etapaTemplateProjetoService;
+    /*private final EtapaTemplateProjetoService etapaTemplateProjetoService;
 
     public EtapaTemplateProjetoController(EtapaTemplateProjetoService etapaTemplateProjetoService){
         this.etapaTemplateProjetoService = etapaTemplateProjetoService;
@@ -41,7 +41,7 @@ public class EtapaTemplateProjetoController {
     @PutMapping("/alterarOrdem")
     @Operation(summary = "Altera a Ordem da Etapa", description = "Realiza a alteração da ordem do Template Etapa dentro de um Template Projeto", tags = {"EtapaTemplateProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity alterarOrdemEtapaTemplateProjeto(@RequestBody @Valid List<AlterarOrdemEtapaTemplateProjetoDTO> listaAlterarOrdemEtapaTemplateProjetoDTO){
-        List<Optional<EtapaTemplateProjeto>> etapaTemplateProjetos = etapaTemplateProjetoService.alterarOrdemEtapaTemplateProjeto(listaAlterarOrdemEtapaTemplateProjetoDTO);
+        List<Optional<EtapaProjeto>> etapaTemplateProjetos = etapaTemplateProjetoService.alterarOrdemEtapaTemplateProjeto(listaAlterarOrdemEtapaTemplateProjetoDTO);
         return ResponseEntity.ok(etapaTemplateProjetos);
     }
 
@@ -50,6 +50,6 @@ public class EtapaTemplateProjetoController {
     public ResponseEntity<Page<EtapaTemplateProjetoDetalhamentoDTO>> listarEtapaTemplateProjeto(@PageableDefault(sort = {"id"}) Pageable paginacao){
         var page = etapaTemplateProjetoService.listarEtapaTemplateProjeto(paginacao);
         return ResponseEntity.ok(page);
-    }
+    }*/
 
 }

@@ -1,6 +1,6 @@
 package com.veigadealmeida.projetofinal.enumerators;
 
-public enum StatusProjetoEnum {
+public enum StatusEnum {
 
     NAO_INICIADO(1),
     EM_ANDAMENTO(2),
@@ -9,7 +9,7 @@ public enum StatusProjetoEnum {
 
     private int status;
 
-    StatusProjetoEnum(int status){
+    StatusEnum(int status){
         this.status = status;
     }
 }

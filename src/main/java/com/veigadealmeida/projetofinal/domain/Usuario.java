@@ -26,13 +26,13 @@ public class Usuario extends BaseEntity implements UserDetails {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "cargo_id")
-    private Cargo cargo;
+    @JoinColumn(name = "grupoId")
+    private Grupo grupo;
 
     private String nome;
     private String telefone;
 
-  @Column (name = "eMail")
+  @Column (name = "email")
     private String email;
 
     private String cpf;
@@ -40,11 +40,6 @@ public class Usuario extends BaseEntity implements UserDetails {
     private String login;
     private String password;
     private Boolean ativo;
-    private String sobrenome;
-    private String empresa;
-    private String cidade;
-    private String estado;
-    private Date nascimento;
 
     @Override
     public String getPassword() {
@@ -78,7 +73,7 @@ public class Usuario extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(cargo.getDescricaoCargo()));
+        return List.of(new SimpleGrantedAuthority(grupo.getDescricaoGrupo()));
     }
 
     public Usuario(UsuarioDTO usuarioDTO){
@@ -90,11 +85,6 @@ public class Usuario extends BaseEntity implements UserDetails {
         this.login = usuarioDTO.login();
         this.password = usuarioDTO.password();
         this.ativo = usuarioDTO.ativo();
-        this.sobrenome = usuarioDTO.sobrenome();
-        this.empresa = usuarioDTO.empresa();
-        this.cidade = usuarioDTO.cidade();
-        this.estado = usuarioDTO.estado();
-        this.nascimento = usuarioDTO.nascimento();
     }
 
     public Usuario atualizaUsuario(Usuario usuario, UsuarioEditarDTO usuarioEditarDTO) {
