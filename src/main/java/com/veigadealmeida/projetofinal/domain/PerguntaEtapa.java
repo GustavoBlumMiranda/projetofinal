@@ -21,14 +21,16 @@ public class PerguntaEtapa extends BaseEntity{
     @JoinColumn(name = "etapaId")
     private Etapa etapa;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "perguntaId")
     private Pergunta pergunta;
 
     private Integer ordem;
 
-    public PerguntaEtapa(AssociaPerguntaEtapaDTO perguntaEtapaDTO){
-        this.ordem =perguntaEtapaDTO.ordem();
+    public PerguntaEtapa(Etapa etapa, Pergunta pergunta, Integer ordem) {
+        this.etapa = etapa;
+        this.pergunta = pergunta;
+        this.ordem = ordem;
     }
 
 }

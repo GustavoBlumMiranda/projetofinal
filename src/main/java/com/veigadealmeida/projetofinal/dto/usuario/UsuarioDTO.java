@@ -7,8 +7,6 @@ public record UsuarioDTO(
 
         String cpf,
 
-        String telefone,
-
         String codUsuario,
 
         String login,
@@ -21,17 +19,7 @@ public record UsuarioDTO(
 
         Boolean ativo,
 
-        Long cargoId,
-
-        String sobrenome,
-
-        String empresa,
-
-        String cidade,
-
-        String estado,
-
-        Date nascimento
+        String tipoUsuario
 ) {}
 
 

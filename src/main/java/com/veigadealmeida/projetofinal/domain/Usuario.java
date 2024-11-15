@@ -2,6 +2,7 @@ package com.veigadealmeida.projetofinal.domain;
 
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
+import com.veigadealmeida.projetofinal.enumerators.TipoUsuarioEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,12 +26,11 @@ public class Usuario extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "grupoId")
-    private Grupo grupo;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipoUsuario")
+    private TipoUsuarioEnum tipoUsuario;
 
     private String nome;
-    private String telefone;
 
   @Column (name = "email")
     private String email;
@@ -73,13 +73,13 @@ public class Usuario extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(grupo.getDescricaoGrupo()));
+        return List.of(new SimpleGrantedAuthority(tipoUsuario.getDescricao()));
     }
 
     public Usuario(UsuarioDTO usuarioDTO){
+        this.tipoUsuario = TipoUsuarioEnum.valueOf(usuarioDTO.tipoUsuario().toUpperCase());
         this.cpf = usuarioDTO.cpf();
         this.nome = usuarioDTO.nome();
-        this.telefone = usuarioDTO.telefone();
         this.email = usuarioDTO.email();
         this.codUsuario = usuarioDTO.codUsuario();
         this.login = usuarioDTO.login();

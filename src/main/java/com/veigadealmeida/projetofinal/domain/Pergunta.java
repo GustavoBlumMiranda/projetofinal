@@ -1,6 +1,7 @@
 package com.veigadealmeida.projetofinal.domain;
 
 
+import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
 import com.veigadealmeida.projetofinal.enumerators.TipoPerguntaEnum;
 import jakarta.persistence.*;
@@ -30,6 +31,8 @@ public class Pergunta extends BaseEntity{
 
     @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OpcaoResposta> opcoesResposta = new ArrayList<>();
+    @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PerguntaEtapa> etapas = new ArrayList<>();
 
     public Pergunta(PerguntaDTO perguntaDTO){
         this.descricaoPergunta = perguntaDTO.descricaoPergunta();
@@ -39,6 +42,20 @@ public class Pergunta extends BaseEntity{
                     .map(opcaoRespostaDTO -> new OpcaoResposta(opcaoRespostaDTO, this))
                     .toList();
         }
+    }
+
+    public Pergunta(PerguntaCadastroDTO perguntaDTO){
+        this.descricaoPergunta = perguntaDTO.descricaoPergunta();
+        this.tipoPergunta = TipoPerguntaEnum.valueOf(perguntaDTO.tipoPergunta().toUpperCase());
+        if(tipoPergunta == TipoPerguntaEnum.MULTIPLA_ESCOLHA){
+            this.opcoesResposta = perguntaDTO.opcoesResposta().stream()
+                    .map(opcaoRespostaDTO -> new OpcaoResposta(opcaoRespostaDTO, this))
+                    .toList();
+        }
+    }
+
+    public Pergunta(Long id) {
+        this.id = id;
     }
 
   }

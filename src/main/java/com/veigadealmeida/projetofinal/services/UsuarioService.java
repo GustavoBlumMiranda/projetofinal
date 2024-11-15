@@ -3,13 +3,11 @@ package com.veigadealmeida.projetofinal.services;
 import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.BadRequestException;
 import com.veigadealmeida.projetofinal.controller.customexceptions.ObjectNotFoundException;
-import com.veigadealmeida.projetofinal.domain.Grupo;
 import com.veigadealmeida.projetofinal.domain.Usuario;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioAlteraSenhaDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
-import com.veigadealmeida.projetofinal.repository.CargoRepository;
 import com.veigadealmeida.projetofinal.repository.UsuarioRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,13 +24,11 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenJWTService tokenJWTService;
-    private final CargoRepository cargoRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, TokenJWTService tokenJWTService, PasswordEncoder passwordEncoder, CargoRepository cargoRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, TokenJWTService tokenJWTService, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.tokenJWTService = tokenJWTService;
         this.passwordEncoder = passwordEncoder;
-        this.cargoRepository = cargoRepository;
     }
 
     public UsuarioDetalhamentoDTO getUsuarioPorId(Long id) {
@@ -71,8 +67,6 @@ public class UsuarioService {
     public UsuarioDetalhamentoDTO cadastrarUsuario(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario(usuarioDTO);
         usuario.setPassword(passwordEncoder.encode(usuarioDTO.password()));
-        Grupo cargo = cargoRepository.findCargoById(usuarioDTO.cargoId()).orElseThrow(() -> new ObjectNotFoundException("Id do cargo não encontrado: " + usuarioDTO.cargoId()));
-        usuario.setGrupo(cargo);
         usuario = usuarioRepository.save(usuario);
         return new UsuarioDetalhamentoDTO(usuario);
     }
@@ -107,10 +101,6 @@ public class UsuarioService {
     @Transactional
     public UsuarioDetalhamentoDTO editarUsuario(UsuarioEditarDTO usuarioEditarDTO){
         Usuario usuario = usuarioRepository.findById(usuarioEditarDTO.id()).orElseThrow(() -> new ObjectNotFoundException("Id do usuário não encontrado: " + usuarioEditarDTO.id()));
-        if(usuarioEditarDTO.cargoId() != null){
-            Grupo cargo = cargoRepository.findCargoById(usuarioEditarDTO.cargoId()).orElseThrow(() -> new ObjectNotFoundException("Id do cargo não encontrado: " + usuarioEditarDTO.cargoId()));
-            usuario.setGrupo(cargo);
-        }
         this.verificaUsuarioDuplicado(usuarioEditarDTO);
         return new UsuarioDetalhamentoDTO(usuario.atualizaUsuario(usuario, usuarioEditarDTO));
     }

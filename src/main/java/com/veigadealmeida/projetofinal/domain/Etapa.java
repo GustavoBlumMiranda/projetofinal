@@ -2,9 +2,13 @@ package com.veigadealmeida.projetofinal.domain;
 
 import com.veigadealmeida.projetofinal.dto.etapa.AtivarOuDesativarEtapaDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EditarTituloEtapaDTO;
+import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaTemplateDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Data
@@ -23,11 +27,18 @@ public class Etapa extends BaseEntity{
 
     private Boolean ativo;
 
-    public Etapa(EtapaTemplateDTO etapaTemplateDTO){
-        this.titulo = etapaTemplateDTO.titulo();
-        this.ativo = etapaTemplateDTO.ativo();
-    }
+    @OneToMany(mappedBy = "etapa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PerguntaEtapa> perguntasEtapa = new ArrayList<>();
 
+    @OneToMany(mappedBy = "etapa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EtapaProjeto> projetos = new ArrayList<>();
+    public Etapa(EtapaCadastroDTO etapaCadastroDTO){
+        this.titulo = etapaCadastroDTO.titulo();
+        this.ativo = true;
+    }
+    public Etapa(Long id) {
+        this.id = id;
+    }
     public void ativarOuDesativarEtapa(AtivarOuDesativarEtapaDTO ativarOuDesativarEtapaDTO, Boolean ativar){
         this.ativo = ativar;
     }

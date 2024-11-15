@@ -15,7 +15,7 @@ public class EtapaProjeto extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "etapaId")
     private Etapa etapa;
 
@@ -27,8 +27,10 @@ public class EtapaProjeto extends BaseEntity{
     private String justificativa;
 
 
-    public EtapaProjeto(EtapaTemplateProjetoDTO etapaTemplateProjetoDTO){
-        this.ordemEtapa = etapaTemplateProjetoDTO.ordemEtapa();
+    public EtapaProjeto(Projeto projeto, Etapa etapa, Integer ordem) {
+        this.projeto = projeto;
+        this.etapa = etapa;
+        this.ordemEtapa = ordem;
     }
 
 }

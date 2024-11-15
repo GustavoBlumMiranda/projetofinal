@@ -1,6 +1,9 @@
 package com.veigadealmeida.projetofinal.domain;
 
+import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
+import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.AlteraProjetoDTO;
+import com.veigadealmeida.projetofinal.dto.projeto.ProjetoCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.ProjetoDTO;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import jakarta.persistence.*;
@@ -10,7 +13,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -37,11 +42,14 @@ public class Projeto extends BaseEntity{
     @JoinColumn(name = "usuarioCriadorId")
     private Usuario usuario;
 
-    public Projeto(ProjetoDTO projetoDTO){
+    public Projeto(ProjetoCadastroDTO projetoDTO) {
         this.titulo = projetoDTO.titulo();
-        this.dataInicio = projetoDTO.dataInicio();
-        this.dataFim = projetoDTO.dataFim();
+        this.statusProjeto = StatusEnum.NAO_INICIADO;
     }
+
+    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EtapaProjeto> etapasProjeto = new ArrayList<>();
+
 
     public Projeto alteraProjeto(Projeto projeto, AlteraProjetoDTO alteraProjetoDTO) {
         Class<?> projetoClass = projeto.getClass();
