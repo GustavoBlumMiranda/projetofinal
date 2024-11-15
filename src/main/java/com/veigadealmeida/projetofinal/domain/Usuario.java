@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,9 @@ public class Usuario extends BaseEntity implements UserDetails {
     private String login;
     private String password;
     private Boolean ativo;
+
+    @ManyToMany(mappedBy = "usuarios")
+    private List<Projeto> projetos = new ArrayList<>();
 
     @Override
     public String getPassword() {

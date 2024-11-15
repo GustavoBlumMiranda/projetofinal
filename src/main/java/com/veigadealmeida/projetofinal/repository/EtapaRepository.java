@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EtapaRepository extends JpaRepository<Etapa, Long> {
-    Etapa findByIdAndAtivo(Long id, Boolean ativo);
     Page<Etapa> findAll(Pageable paginacao);
 }

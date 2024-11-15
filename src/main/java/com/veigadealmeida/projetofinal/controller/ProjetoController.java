@@ -48,6 +48,13 @@ public class ProjetoController {
         return ResponseEntity.ok(projetoDetalhamentoDTO);
     }
 
+    @PostMapping("/associarusuario")
+    @Operation(summary = "Associar Usuário ao Projeto", description = "Associa um usuário existente a um projeto existente", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<String> associarUsuarioAoProjeto(@RequestParam Long projetoId, @RequestParam Long usuarioId) {
+        return projetoService.associarUsuarioAoProjeto(projetoId, usuarioId);
+    }
+
+
 
 
     /*@PutMapping("/atualizarstatusprojeto")

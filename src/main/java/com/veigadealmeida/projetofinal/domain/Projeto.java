@@ -38,9 +38,13 @@ public class Projeto extends BaseEntity{
     private StatusEnum statusProjeto;
 
 
-    @ManyToOne
-    @JoinColumn(name = "usuarioCriadorId")
-    private Usuario usuario;
+    @ManyToMany
+    @JoinTable(
+            name = "usuarioProjeto",
+            joinColumns = @JoinColumn(name = "projetoId"),
+            inverseJoinColumns = @JoinColumn(name = "usuarioId")
+    )
+    private List<Usuario> usuarios = new ArrayList<>();
 
     public Projeto(ProjetoCadastroDTO projetoDTO) {
         this.titulo = projetoDTO.titulo();

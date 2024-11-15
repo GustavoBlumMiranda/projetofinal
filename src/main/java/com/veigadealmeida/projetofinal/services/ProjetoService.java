@@ -11,6 +11,7 @@ import com.veigadealmeida.projetofinal.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,10 +24,12 @@ public class ProjetoService {
     private final ProjetoRepository projetoRepository;
     private final EtapaRepository etapaRepository;
     private final PerguntaRepository perguntaRepository;
-    public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository) {
+    private final UsuarioRepository usuarioRepository;
+    public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository, UsuarioRepository usuarioRepository) {
         this.projetoRepository = projetoRepository;
         this.etapaRepository = etapaRepository;
         this.perguntaRepository = perguntaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
@@ -84,6 +87,24 @@ public class ProjetoService {
         return projetoRepository.findAll(paginacao).map(ProjetoDetalhamentoDTO::new);
 
     }
+
+    @Transactional
+    public ResponseEntity<String> associarUsuarioAoProjeto(Long projetoId, Long usuarioId) {
+        Projeto projeto = projetoRepository.findById(projetoId)
+                .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + projetoId + " não encontrado."));
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
+
+        if (!projeto.getUsuarios().contains(usuario)) {
+            projeto.getUsuarios().add(usuario);
+            usuario.getProjetos().add(projeto);
+            projetoRepository.save(projeto);
+        }
+
+        return ResponseEntity.ok("Usuário associado ao projeto com sucesso.");
+    }
+
 
     /*@Transactional
     public Projeto atualizarStatusProjeto(AtualizarStatusProjetoDTO atualizarStatusProjetoDTO) {

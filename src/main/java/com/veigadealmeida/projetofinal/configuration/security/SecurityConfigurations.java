@@ -31,11 +31,13 @@ public class SecurityConfigurations {
                 .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .anyRequest().authenticated() // Permite qualquer requisição autenticada
+                .requestMatchers(HttpMethod.POST, "/login").permitAll() // Permite a rota /login para todos
+                .anyRequest().authenticated() // Requer autenticação para todas as outras requisições
                 .and().cors()
                 .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
 
     @Bean

@@ -25,8 +25,6 @@ public class Etapa extends BaseEntity{
 
     private String titulo;
 
-    private Boolean ativo;
-
     @OneToMany(mappedBy = "etapa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerguntaEtapa> perguntasEtapa = new ArrayList<>();
 
@@ -34,13 +32,9 @@ public class Etapa extends BaseEntity{
     private List<EtapaProjeto> projetos = new ArrayList<>();
     public Etapa(EtapaCadastroDTO etapaCadastroDTO){
         this.titulo = etapaCadastroDTO.titulo();
-        this.ativo = true;
     }
     public Etapa(Long id) {
         this.id = id;
-    }
-    public void ativarOuDesativarEtapa(AtivarOuDesativarEtapaDTO ativarOuDesativarEtapaDTO, Boolean ativar){
-        this.ativo = ativar;
     }
 
     public void editarTituloEtapa(EditarTituloEtapaDTO editarTituloEtapaDTO){

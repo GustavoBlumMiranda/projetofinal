@@ -9,14 +9,12 @@ import java.util.stream.Collectors;
 public record EtapaDetalhamentoDTO(
         Long id,
         String titulo,
-        Boolean ativo,
         List<PerguntaDetalhamentoDTO> perguntas
 ) {
     public EtapaDetalhamentoDTO(Etapa etapa) {
         this(
                 etapa.getId(),
                 etapa.getTitulo(),
-                etapa.getAtivo(),
                 etapa.getPerguntasEtapa().stream()
                         .map(pe -> new PerguntaDetalhamentoDTO(pe.getPergunta()))
                         .collect(Collectors.toList())

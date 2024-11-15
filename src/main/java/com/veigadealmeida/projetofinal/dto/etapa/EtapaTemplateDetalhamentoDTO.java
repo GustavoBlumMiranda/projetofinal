@@ -2,8 +2,8 @@ package com.veigadealmeida.projetofinal.dto.etapa;
 
 import com.veigadealmeida.projetofinal.domain.Etapa;
 
-public record EtapaTemplateDetalhamentoDTO(Long id, String titulo, Boolean ativo, String justificativa){
+public record EtapaTemplateDetalhamentoDTO(Long id, String titulo, String justificativa){
     public EtapaTemplateDetalhamentoDTO(Etapa etapa){
-        this(etapa.getId(), etapa.getTitulo(), etapa.getAtivo(), etapa.getTitulo());
+        this(etapa.getId(), etapa.getTitulo(), etapa.getTitulo());
     }
 }
