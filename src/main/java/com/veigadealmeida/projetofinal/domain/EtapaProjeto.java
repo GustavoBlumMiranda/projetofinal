@@ -4,6 +4,9 @@ import com.veigadealmeida.projetofinal.dto.etapatemplateprojeto.EtapaTemplatePro
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +28,6 @@ public class EtapaProjeto extends BaseEntity{
 
     private Integer ordemEtapa;
     private String justificativa;
-
 
     public EtapaProjeto(Projeto projeto, Etapa etapa, Integer ordem) {
         this.projeto = projeto;

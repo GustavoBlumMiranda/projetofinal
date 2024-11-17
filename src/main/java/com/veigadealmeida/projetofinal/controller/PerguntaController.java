@@ -3,6 +3,7 @@ package com.veigadealmeida.projetofinal.controller;
 
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDetalhamentoDTO;
+import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
 import com.veigadealmeida.projetofinal.services.OpcaoRespostaService;
 import com.veigadealmeida.projetofinal.services.PerguntaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,6 +58,12 @@ public class PerguntaController {
     public ResponseEntity<PerguntaDetalhamentoDTO> atualizarPergunta(@PathVariable Long id, @RequestBody @Valid PerguntaDTO perguntaDTO) {
         PerguntaDetalhamentoDTO perguntaDetalhamentoDTO = perguntaService.atualizarPergunta(id, perguntaDTO);
         return ResponseEntity.ok(perguntaDetalhamentoDTO);
+    }
+
+    @PostMapping("/responder")
+    @Operation(summary = "Responde uma pergunta", description = "Responde uma pergunta", tags = {"PerguntaController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<String> responderPergunta(@RequestBody RespostaPerguntaDTO respostaPerguntaDTO) {
+        return perguntaService.responderPergunta(respostaPerguntaDTO);
     }
 
 

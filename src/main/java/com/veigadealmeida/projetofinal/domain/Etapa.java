@@ -31,7 +31,7 @@ public class Etapa extends BaseEntity{
     @OneToMany(mappedBy = "etapa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EtapaProjeto> projetos = new ArrayList<>();
     public Etapa(EtapaCadastroDTO etapaCadastroDTO){
-        this.titulo = etapaCadastroDTO.titulo();
+        this.titulo = etapaCadastroDTO.nomeEtapa();
     }
     public Etapa(Long id) {
         this.id = id;

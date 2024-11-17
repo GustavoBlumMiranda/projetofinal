@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +32,12 @@ public class EtapaEmUso extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "statusEtapaEmUso")
     private StatusEnum statusEtapaEmUso;
+
+    public EtapaEmUso(EtapaProjeto etapaProjeto, Usuario usuario){
+        this.usuario = usuario;
+        this.etapaProjeto = etapaProjeto;
+        this.statusEtapaEmUso = StatusEnum.NAO_INICIADO;
+    }
 
 
 }

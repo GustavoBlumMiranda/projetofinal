@@ -1,5 +1,6 @@
 package com.veigadealmeida.projetofinal.domain;
 
+import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.respostasprojeto.AlterarRespostasProjetoDTO;
 import com.veigadealmeida.projetofinal.dto.respostasprojeto.RespostasProjetoDTO;
 import jakarta.persistence.*;
@@ -22,10 +23,6 @@ public class RespostasEtapaEmUso extends BaseEntity{
     private EtapaEmUso etapaEmUso;
 
     @ManyToOne
-    @JoinColumn(name = "UsuarioId", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne
     @JoinColumn(name = "perguntaId", nullable = false)
     private Pergunta pergunta;
 
@@ -35,29 +32,22 @@ public class RespostasEtapaEmUso extends BaseEntity{
 
     private String respostaString;
 
-    private Float respostaNumerica;
+    private Double respostaNumerica;
 
     private Boolean respondida;
 
-    private Boolean aprovada;
-
-    public RespostasEtapaEmUso(RespostasProjetoDTO respostasProjetoDTO){
-        this.respostaString = respostasProjetoDTO.respostaString();
-        this.respostaNumerica = respostasProjetoDTO.respostaNumerica();
-        this.respondida = respostasProjetoDTO.respondida();
+    public RespostasEtapaEmUso(Pergunta pergunta, EtapaEmUso etapaEmUso, RespostaPerguntaDTO respostaPerguntaDTO, OpcaoResposta opcaoResposta) {
+        this.pergunta = pergunta;
+        this.etapaEmUso = etapaEmUso;
+        this.respostaString = respostaPerguntaDTO.resposta();
+        this.respostaNumerica = respostaPerguntaDTO.respostaNumerica();
+        this.opcaoResposta = opcaoResposta;
+        respondida = true;
     }
 
-    public RespostasEtapaEmUso AtualizaRespostasProjeto(AlterarRespostasProjetoDTO respostasProjetoDTO, RespostasEtapaEmUso respostasProjeto){
-        if(respostasProjetoDTO.respostaString() != null){
-            respostasProjeto.setRespostaString(respostasProjetoDTO.respostaString());
-        }
-        if(respostasProjetoDTO.respostaNumerica() != null){
-            respostasProjeto.setRespostaNumerica(respostasProjetoDTO.respostaNumerica());
-        }
-        if (respostasProjetoDTO.respondida() != null){
-            respostasProjeto.setRespondida(respostasProjetoDTO.respondida());
-        }
-        return respostasProjeto;
-    }
+   /* public RespostasEtapaEmUso(RespostaPerguntaDTO respostaPerguntaDTO, Pergunta pergunta, OpcaoResposta opcaoResposta) {
+        this.pergunta =  pergunta;
+        this.
+    }*/
 
 }

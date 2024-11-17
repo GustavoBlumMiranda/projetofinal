@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 public record ProjetoDetalhamentoDTO(
         Long id,
         String titulo,
-        Date dataInicio,
-        Date dataFim,
         Date createdAt,
         Date updatedAt,
         List<EtapaDetalhamentoDTO> etapas
@@ -21,8 +19,6 @@ public record ProjetoDetalhamentoDTO(
         this(
                 projeto.getId(),
                 projeto.getTitulo(),
-                projeto.getDataInicio(),
-                projeto.getDataFim(),
                 projeto.getCreatedAt(),
                 projeto.getUpdatedAt(),
                 projeto.getEtapasProjeto().stream()

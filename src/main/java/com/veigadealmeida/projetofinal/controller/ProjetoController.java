@@ -54,6 +54,12 @@ public class ProjetoController {
         return projetoService.associarUsuarioAoProjeto(projetoId, usuarioId);
     }
 
+    @GetMapping("/listarPorUsuario/{usuarioId}")
+    @Operation(summary = "Listar Projetos por Usuário", description = "Retorna a listagem de projetos associados a um usuário específico", tags = {"ProjetoController"})
+    public ResponseEntity<Page<ProjetoSimplesDetalhamentoDTO>> listarProjetosPorUsuario(@PathVariable(value = "usuarioId") Long usuarioId, Pageable paginacao) {
+        Page<ProjetoSimplesDetalhamentoDTO> projetos = projetoService.listarProjetoPorUsuario(paginacao, usuarioId);
+        return ResponseEntity.ok(projetos);
+    }
 
 
 

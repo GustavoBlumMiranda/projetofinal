@@ -7,15 +7,20 @@ import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
+import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import com.veigadealmeida.projetofinal.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -25,11 +30,13 @@ public class ProjetoService {
     private final EtapaRepository etapaRepository;
     private final PerguntaRepository perguntaRepository;
     private final UsuarioRepository usuarioRepository;
-    public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository, UsuarioRepository usuarioRepository) {
+    private final EtapaEmUsoRepository etapaEmUsoRepository;
+    public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository, UsuarioRepository usuarioRepository,EtapaEmUsoRepository etapaEmUsoRepository) {
         this.projetoRepository = projetoRepository;
         this.etapaRepository = etapaRepository;
         this.perguntaRepository = perguntaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.etapaEmUsoRepository = etapaEmUsoRepository;
     }
 
     @Transactional
@@ -51,22 +58,23 @@ public class ProjetoService {
             EtapaProjeto etapaProjeto = new EtapaProjeto(projeto, etapa, ordemEtapa);
             projeto.getEtapasProjeto().add(etapaProjeto);
             etapa.getProjetos().add(etapaProjeto);
+            if(etapaDTO.id() == null) {
+                Integer ordemPergunta = 0;
+                for (PerguntaCadastroDTO perguntaCadastroDTO : etapaDTO.perguntas()) {
+                    ordemPergunta++;
+                    Pergunta pergunta;
 
-            Integer ordemPergunta = 0;
-            for (PerguntaCadastroDTO perguntaCadastroDTO : etapaDTO.perguntas()) {
-                ordemPergunta++;
-                Pergunta pergunta;
+                    if (perguntaCadastroDTO.id() != null) {
+                        pergunta = perguntaRepository.findById(perguntaCadastroDTO.id())
+                                .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + perguntaCadastroDTO.id() + " não encontrada."));
+                    } else {
+                        pergunta = new Pergunta(perguntaCadastroDTO);
+                    }
 
-                if (perguntaCadastroDTO.id() != null) {
-                    pergunta = perguntaRepository.findById(perguntaCadastroDTO.id())
-                            .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + perguntaCadastroDTO.id() + " não encontrada."));
-                } else {
-                    pergunta = new Pergunta(perguntaCadastroDTO);
+                    PerguntaEtapa perguntaEtapa = new PerguntaEtapa(etapa, pergunta, ordemPergunta);
+                    etapa.getPerguntasEtapa().add(perguntaEtapa);
+                    pergunta.getEtapas().add(perguntaEtapa);
                 }
-
-                PerguntaEtapa perguntaEtapa = new PerguntaEtapa(etapa, pergunta, ordemPergunta);
-                etapa.getPerguntasEtapa().add(perguntaEtapa);
-                pergunta.getEtapas().add(perguntaEtapa);
             }
         }
 
@@ -101,26 +109,45 @@ public class ProjetoService {
             usuario.getProjetos().add(projeto);
             projetoRepository.save(projeto);
         }
+        List<EtapaEmUso> etapasEmUso = projeto.getEtapasProjeto().stream()
+                .map(etapaProjeto -> new EtapaEmUso(etapaProjeto, usuario))
+                .toList();
+
+        etapaEmUsoRepository.saveAll(etapasEmUso);
+
 
         return ResponseEntity.ok("Usuário associado ao projeto com sucesso.");
     }
 
+    public Page<ProjetoSimplesDetalhamentoDTO> listarProjetoPorUsuario(Pageable paginacao, Long usuarioid) {
+        List<Projeto> projetosAssociados = projetoRepository.findProjetosByUsuarioId(usuarioid);
+        List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
 
-    /*@Transactional
-    public Projeto atualizarStatusProjeto(AtualizarStatusProjetoDTO atualizarStatusProjetoDTO) {
-        Optional<Projeto> projetoOptional = projetoRepository.findById(atualizarStatusProjetoDTO.idProjeto());
-        if(projetoOptional.isPresent()){
-            Projeto projeto = projetoOptional.get();
-            projeto.setStatusProjeto(statusProjetoRepository.findById(atualizarStatusProjetoDTO.idStatusProjeto())
-                    .orElseThrow(() -> new ObjectNotFoundException("Não foi encontrado status de projeto projeto com o id " + atualizarStatusProjetoDTO.idStatusProjeto())));
-            projeto = projetoRepository.save(projeto);
-            return projeto;
-        } else {
-            throw new ObjectNotFoundException("Não foi encontrado nenhum projeto com o id " + atualizarStatusProjetoDTO.idProjeto());
+        for (Projeto proj : projetosAssociados){
+            List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuarioid, proj.getId());
+            if (listaEtapaEmUso.isEmpty()) {
+                continue;
+            }
+            String status = "EM ANDAMENTO";
+            int concluidos = (int) listaEtapaEmUso.stream()
+                    .filter(etapa -> etapa.getStatusEtapaEmUso().equals(StatusEnum.CONCLUIDO))
+                    .count();
+            boolean todasConcluidas = listaEtapaEmUso.stream()
+                    .allMatch(etapa -> etapa.getStatusEtapaEmUso().equals(StatusEnum.CONCLUIDO));
+            boolean primeiroNaoIniciado = listaEtapaEmUso.get(0).getStatusEtapaEmUso().equals(StatusEnum.NAO_INICIADO);
+            Date dataInicio = listaEtapaEmUso.get(0).getCreatedAt();
+            Date datafim = todasConcluidas ? listaEtapaEmUso.get(listaEtapaEmUso.size() - 1).getUpdatedAt() : null;
+            if(todasConcluidas){
+                status = "CONCLUÍDO";
+            }
+            if(primeiroNaoIniciado){
+                status = "NÃO INICIADO";
+                dataInicio = null;
+            }
+            retorno.add(new ProjetoSimplesDetalhamentoDTO(proj, status, concluidos, dataInicio, datafim));
         }
-    }*/
-
-
+        return new PageImpl<>(retorno, paginacao, retorno.size());
+    }
 
 
 
