@@ -2,7 +2,6 @@ package com.veigadealmeida.projetofinal.dto.projeto;
 
 import com.veigadealmeida.projetofinal.domain.Projeto;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaDetalhamentoDTO;
-import com.veigadealmeida.projetofinal.dto.templateprojeto.TemplateProjetoDetalhamentoDTO;
 
 import java.util.Date;
 import java.util.List;
