@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Data

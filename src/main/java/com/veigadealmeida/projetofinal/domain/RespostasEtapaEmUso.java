@@ -1,8 +1,6 @@
 package com.veigadealmeida.projetofinal.domain;
 
 import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
-import com.veigadealmeida.projetofinal.dto.respostasprojeto.AlterarRespostasProjetoDTO;
-import com.veigadealmeida.projetofinal.dto.respostasprojeto.RespostasProjetoDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

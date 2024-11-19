@@ -1,9 +1,6 @@
 package com.veigadealmeida.projetofinal.dto.projeto;
 
-
 import com.veigadealmeida.projetofinal.domain.Projeto;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.Date;
 
 public record ProjetoSimplesDetalhamentoDTO(Long idProjeto, String titulo, String situacao, Integer totalEtapas, Integer etapasConcluidas, Date dataInicio, Date datafim){

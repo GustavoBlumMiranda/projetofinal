@@ -1,7 +1,5 @@
 package com.veigadealmeida.projetofinal.domain;
 
-
-import com.veigadealmeida.projetofinal.dto.projeto.AlteraProjetoDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.ProjetoCadastroDTO;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import jakarta.persistence.*;
@@ -10,7 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -49,28 +46,5 @@ public class Projeto extends BaseEntity{
 
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EtapaProjeto> etapasProjeto = new ArrayList<>();
-
-
-    public Projeto alteraProjeto(Projeto projeto, AlteraProjetoDTO alteraProjetoDTO) {
-        Class<?> projetoClass = projeto.getClass();
-        Class<?> dtoClass = alteraProjetoDTO.getClass();
-
-        Field[] campos = dtoClass.getDeclaredFields();
-        for (Field campo : campos) {
-            try {
-                Field projetoField = projetoClass.getDeclaredField(campo.getName());
-                campo.setAccessible(true);
-                Object valor = campo.get(alteraProjetoDTO);
-                if (valor != null) {
-                    projetoField.setAccessible(true);
-                    projetoField.set(projeto, valor);
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return projeto;
-    }
 
 }

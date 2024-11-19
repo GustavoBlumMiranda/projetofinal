@@ -1,6 +1,5 @@
 package com.veigadealmeida.projetofinal.domain;
 
-import com.veigadealmeida.projetofinal.dto.perguntaetapa.AssociaPerguntaEtapaDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

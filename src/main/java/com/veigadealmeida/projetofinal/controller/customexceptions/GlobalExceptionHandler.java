@@ -46,18 +46,6 @@ public class GlobalExceptionHandler {
          return new ResponseEntity<>(apiException, badRequest);
     }
 
-    @ExceptionHandler(value= {LoopException.class})
-    public ResponseEntity<Object> handleServiceException(LoopException ex) {
-        //TODO: Verificar se o status 409 é o mais adequado
-        HttpStatus conflict = HttpStatus.CONFLICT;
-
-        ApiException apiException = new ApiException(
-                ex.getMessage(),
-                conflict,
-                ZonedDateTime.now(ZoneId.of("Z"))
-        );
-         return new ResponseEntity<>(apiException, conflict);
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex, HandlerMethod handlerMethod) {

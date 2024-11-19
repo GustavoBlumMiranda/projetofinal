@@ -8,7 +8,6 @@ import com.veigadealmeida.projetofinal.domain.PerguntaEtapa;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
-import com.veigadealmeida.projetofinal.dto.projeto.ProjetoDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.repository.EtapaRepository;
 import com.veigadealmeida.projetofinal.repository.PerguntaRepository;
 import jakarta.transaction.Transactional;
@@ -16,7 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
 
 @Service
 public class EtapaService {

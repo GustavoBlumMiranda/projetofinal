@@ -1,12 +1,10 @@
 package com.veigadealmeida.projetofinal.services;
 
 import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
-import com.veigadealmeida.projetofinal.controller.customexceptions.ObjectNotFoundException;
 import com.veigadealmeida.projetofinal.domain.*;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
-import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import com.veigadealmeida.projetofinal.repository.*;
 import jakarta.transaction.Transactional;
@@ -19,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service

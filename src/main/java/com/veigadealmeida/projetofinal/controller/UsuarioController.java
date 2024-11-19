@@ -1,6 +1,5 @@
 package com.veigadealmeida.projetofinal.controller;
 
-import com.veigadealmeida.projetofinal.dto.usuario.UsuarioAlteraSenhaDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
@@ -76,13 +75,6 @@ public class UsuarioController implements UserDetailsService {
 	public ResponseEntity<Page<UsuarioDetalhamentoDTO>> listarUsuario(@PageableDefault(sort = {"id"}) Pageable paginacao){
 		var page = usuarioService.listarUsuario(paginacao);
 		return ResponseEntity.ok(page);
-	}
-
-	@PutMapping("/alterarsenha")
-	@Operation(summary = "Altera senha", description = "Realiza a alteração de senha de um usuário", tags = {"UsuarioController"})
-	public ResponseEntity<UsuarioDetalhamentoDTO> alterarSenha(@RequestBody @Valid UsuarioAlteraSenhaDTO usuarioAlteraSenhaDTO){
-		return ResponseEntity.ok(usuarioService.alterarSenha(usuarioAlteraSenhaDTO, null));
-
 	}
 
 	@PutMapping("/editar")

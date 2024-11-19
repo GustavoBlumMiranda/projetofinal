@@ -1,8 +1,5 @@
 package com.veigadealmeida.projetofinal.dto.usuario;
 
-import java.util.Date;
-
-
 public record UsuarioDTO(
 
         String cpf,

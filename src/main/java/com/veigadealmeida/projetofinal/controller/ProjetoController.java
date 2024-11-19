@@ -1,8 +1,6 @@
 package com.veigadealmeida.projetofinal.controller;
 
-import com.veigadealmeida.projetofinal.domain.Projeto;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
-import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.services.ProjetoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,8 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin

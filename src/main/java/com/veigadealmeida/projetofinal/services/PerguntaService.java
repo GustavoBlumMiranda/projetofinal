@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,13 +23,13 @@ public class PerguntaService {
     private final EtapaEmUsoRepository etapaEmUsoRepository;
     private final RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository;
     private final OpcaoRespostaRepository opcaoRespostaRepository;
-    private final EtapaProjetoRepository etapaProjetoRepository;
-    public PerguntaService(PerguntaRepository perguntaRepository, EtapaEmUsoRepository etapaEmUsoRepository, RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository, OpcaoRespostaRepository opcaoRespostaRepository, EtapaProjetoRepository etapaProjetoRepository) {
+    private final PerguntaEtapaRepository perguntaEtapaRepository;
+    public PerguntaService(PerguntaRepository perguntaRepository, EtapaEmUsoRepository etapaEmUsoRepository, RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository, OpcaoRespostaRepository opcaoRespostaRepository, PerguntaEtapaRepository perguntaEtapaRepository) {
         this.perguntaRepository = perguntaRepository;
         this.etapaEmUsoRepository = etapaEmUsoRepository;
         this.respostasEtapaEmUsoRepository = respostasEtapaEmUsoRepository;
         this.opcaoRespostaRepository = opcaoRespostaRepository;
-        this.etapaProjetoRepository = etapaProjetoRepository;
+        this.perguntaEtapaRepository = perguntaEtapaRepository;
     }
 
     @Transactional
@@ -65,17 +65,31 @@ public class PerguntaService {
     public ResponseEntity<String> responderPergunta(RespostaPerguntaDTO respostaPerguntaDTO) {
         Pergunta pergunta = perguntaRepository.findById(respostaPerguntaDTO.perguntaId()).get();
         EtapaEmUso etapaEmUso = etapaEmUsoRepository.findById(respostaPerguntaDTO.etapaEmUsoId()).get();
-        //EtapaProjeto etapaProjeto = etapaProjetoRepository.findById()
-        if(etapaEmUso.getStatusEtapaEmUso() == StatusEnum.NAO_INICIADO){
+        EtapaProjeto etapaProjeto = etapaEmUso.getEtapaProjeto();
+
+        if (etapaEmUso.getStatusEtapaEmUso() == StatusEnum.NAO_INICIADO) {
             etapaEmUso.setStatusEtapaEmUso(StatusEnum.EM_ANDAMENTO);
+            etapaEmUsoRepository.save(etapaEmUso);
         }
+
         OpcaoResposta opcaoResposta = null;
-        if(respostaPerguntaDTO.idOpcaoResposta() != null){
+        if (respostaPerguntaDTO.idOpcaoResposta() != null) {
             opcaoResposta = opcaoRespostaRepository.findById(respostaPerguntaDTO.idOpcaoResposta()).get();
         }
         respostasEtapaEmUsoRepository.save(new RespostasEtapaEmUso(pergunta, etapaEmUso, respostaPerguntaDTO, opcaoResposta));
+
+        List<PerguntaEtapa> perguntasEtapa = perguntaEtapaRepository.findAllByEtapa(etapaProjeto.getEtapa());
+        int totalPerguntas = perguntasEtapa.size();
+        int perguntasRespondidas = respostasEtapaEmUsoRepository.countRespostasEtapaEmUsoByEtapaEmUso(etapaEmUso);
+
+        if (perguntasRespondidas == totalPerguntas) {
+            etapaEmUso.setStatusEtapaEmUso(StatusEnum.CONCLUIDO);
+            etapaEmUsoRepository.save(etapaEmUso);
+        }
+
         return ResponseEntity.ok("Pergunta Respondida com sucesso!");
     }
+
 
 
 

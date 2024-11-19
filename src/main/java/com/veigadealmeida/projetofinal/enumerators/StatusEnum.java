@@ -2,14 +2,18 @@ package com.veigadealmeida.projetofinal.enumerators;
 
 public enum StatusEnum {
 
-    NAO_INICIADO(1),
-    EM_ANDAMENTO(2),
-    CONCLUIDO(3),
-    CANCELADO(4);
+    NAO_INICIADO("Não Iniciado"),
+    EM_ANDAMENTO("Em andamento"),
+    CONCLUIDO("Concluido"),
+    CANCELADO("Cancelado");
 
-    private int status;
+    private final String descricao;
 
-    StatusEnum(int status){
-        this.status = status;
+    StatusEnum(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 }

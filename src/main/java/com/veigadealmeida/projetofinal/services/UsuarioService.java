@@ -4,7 +4,6 @@ import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.BadRequestException;
 import com.veigadealmeida.projetofinal.controller.customexceptions.ObjectNotFoundException;
 import com.veigadealmeida.projetofinal.domain.Usuario;
-import com.veigadealmeida.projetofinal.dto.usuario.UsuarioAlteraSenhaDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
@@ -50,18 +49,7 @@ public class UsuarioService {
         return usuarioRepository.findAll(paginacao).map(UsuarioDetalhamentoDTO::new);
     }
 
-    @Transactional
-    public UsuarioDetalhamentoDTO alterarSenha(UsuarioAlteraSenhaDTO usuarioAlteraSenhaDTO, Usuario usuarioDeslogado) {
-        Usuario usuario = usuarioDeslogado;
-        if(usuario == null){
-            String login = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
-            usuario = usuarioRepository.findByLogin(login);
-        }
-        this.validaAlteracaoSenha(usuario, usuarioAlteraSenhaDTO, usuarioDeslogado);
-        usuario.setPassword(passwordEncoder.encode(usuarioAlteraSenhaDTO.senhaNova()));
-        usuario = usuarioRepository.save(usuario);
-        return new UsuarioDetalhamentoDTO(usuario);
-    }
+
 
     @Transactional
     public UsuarioDetalhamentoDTO cadastrarUsuario(UsuarioDTO usuarioDTO){
@@ -79,23 +67,6 @@ public class UsuarioService {
         }
 
         usuarioRepository.delete(Usuario.get());
-    }
-
-    public void validaAlteracaoSenha(Usuario usuario, UsuarioAlteraSenhaDTO usuarioAlteraSenhaDTO, Usuario usuarioDeslogado) {
-        String senhaAtual;
-        if(usuarioDeslogado == null){
-            senhaAtual = usuarioRepository.findById(usuario.getId()).get().getPassword();
-        } else {
-            senhaAtual = usuarioRepository.findById(usuarioDeslogado.getId()).get().getPassword();
-        }
-        String senhaNova = usuarioAlteraSenhaDTO.senhaNova();
-        String senhaConfirmaNovaSenha = usuarioAlteraSenhaDTO.senhaConfirmaNovaSenha();
-        if (passwordEncoder.matches(senhaNova, senhaAtual)) {
-            throw new BadRequestException("Senha atual e nova senha são iguais");
-        }
-        if (!senhaNova.equals(senhaConfirmaNovaSenha)) {
-            throw new BadRequestException("Nova senha e confirmação de senha não são iguais");
-        }
     }
 
     @Transactional

@@ -4,7 +4,6 @@ package com.veigadealmeida.projetofinal.controller;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
-import com.veigadealmeida.projetofinal.services.OpcaoRespostaService;
 import com.veigadealmeida.projetofinal.services.PerguntaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,11 +21,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class PerguntaController {
 
     private final PerguntaService perguntaService;
-    private final OpcaoRespostaService opcaoRespostaService;
 
-    public PerguntaController(PerguntaService perguntaService, OpcaoRespostaService opcaoRespostaService){
+    public PerguntaController(PerguntaService perguntaService){
         this.perguntaService = perguntaService;
-        this.opcaoRespostaService = opcaoRespostaService;
     }
 
     @PostMapping("/cadastrar")

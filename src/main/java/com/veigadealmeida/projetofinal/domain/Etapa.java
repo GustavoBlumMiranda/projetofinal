@@ -1,9 +1,6 @@
 package com.veigadealmeida.projetofinal.domain;
 
-import com.veigadealmeida.projetofinal.dto.etapa.AtivarOuDesativarEtapaDTO;
-import com.veigadealmeida.projetofinal.dto.etapa.EditarTituloEtapaDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
-import com.veigadealmeida.projetofinal.dto.etapa.EtapaTemplateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,10 +32,6 @@ public class Etapa extends BaseEntity{
     }
     public Etapa(Long id) {
         this.id = id;
-    }
-
-    public void editarTituloEtapa(EditarTituloEtapaDTO editarTituloEtapaDTO){
-        this.titulo = editarTituloEtapaDTO.titulo();
     }
 
 
