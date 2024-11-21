@@ -50,28 +50,28 @@ public class ProjetoController {
         return projetoService.associarUsuarioAoProjeto(projetoId, usuarioId);
     }
 
-    @GetMapping("/listarPorUsuario/{usuarioId}")
-    @Operation(summary = "Listar Projetos por Usuário", description = "Retorna a listagem de projetos associados a um usuário específico", tags = {"ProjetoController"})
-    public ResponseEntity<Page<ProjetoSimplesDetalhamentoDTO>> listarProjetosPorUsuario(@PathVariable(value = "usuarioId") Long usuarioId, Pageable paginacao) {
+    @GetMapping("/acompanharporusuario/{usuarioId}")
+    @Operation(summary = "Listar Projetos por Usuário", description = "Retorna a listagem de acompanhamento de projetos associados a um usuário específico", tags = {"ProjetoController"})
+    public ResponseEntity<Page<ProjetoSimplesDetalhamentoDTO>> acompanharProjetosPorUsuario(@PathVariable(value = "usuarioId") Long usuarioId, Pageable paginacao) {
         Page<ProjetoSimplesDetalhamentoDTO> projetos = projetoService.listarProjetoPorUsuario(paginacao, usuarioId);
         return ResponseEntity.ok(projetos);
     }
 
-
-
-    /*@PutMapping("/atualizarstatusprojeto")
-    @Operation(summary = "Alteração de Estado do Projeto", description = "Atualiza o status de um Projeto", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<Projeto> atualizarStatusProjeto(@RequestBody @Valid AtualizarStatusProjetoDTO atualizarStatusProjetoDTO){
-        return ResponseEntity.ok(projetoService.atualizarStatusProjeto(atualizarStatusProjetoDTO));
-    }
-    @GetMapping("/listarstatus")
-    @Operation(summary = "Listagem dos Status Projetos", description = "Realiza a listagem dos status projetos existentes (tabela status_projeto)", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<List<StatusProjetoDetalhamentoDTO>> listarStatusProjeto(){
-        List<StatusProjetoDetalhamentoDTO> listaStatus = projetoService.listarStatusProjeto();
-        return ResponseEntity.ok(listaStatus);
+    @GetMapping("/acompanhar")
+    @Operation(summary = "Listar Projetos por Usuário", description = "Retorna a listagem de acompanhamento de projetos", tags = {"ProjetoController"})
+    public ResponseEntity<Page<ProjetoSimplesDetalhamentoDTO>> acompanharProjetos(Pageable paginacao) {
+        Page<ProjetoSimplesDetalhamentoDTO> projetos = projetoService.acompanharProjetos(paginacao);
+        return ResponseEntity.ok(projetos);
     }
 
-    @PutMapping("/alterar")
+    @GetMapping("/acompanhar/ususariologado")
+    @Operation(summary = "Listar Projetos por Usuário", description = "Retorna a listagem de acompanhamento de projetos do usuario logado", tags = {"ProjetoController"})
+    public ResponseEntity<Page<ProjetoSimplesDetalhamentoDTO>> acompanharProjetosUsuarioLogado(Pageable paginacao) {
+        Page<ProjetoSimplesDetalhamentoDTO> projetos = projetoService.listarProjetoPorUsuario(paginacao, null);
+        return ResponseEntity.ok(projetos);
+    }
+
+    /*@PutMapping("/alterar")
     @Operation(summary = "Altera dados de um projeto", description = "Altera dados de um projeto", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<ProjetoDetalhamentoDTO> alteraProjeto(@RequestBody AlteraProjetoDTO alterarProjetoDTO){
         ProjetoDetalhamentoDTO projetoDetalhamentoDTO = projetoService.alteraProjeto(alterarProjetoDTO);

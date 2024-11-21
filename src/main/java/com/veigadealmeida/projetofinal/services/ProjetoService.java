@@ -1,5 +1,6 @@
 package com.veigadealmeida.projetofinal.services;
 
+import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
 import com.veigadealmeida.projetofinal.domain.*;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
@@ -27,12 +28,16 @@ public class ProjetoService {
     private final PerguntaRepository perguntaRepository;
     private final UsuarioRepository usuarioRepository;
     private final EtapaEmUsoRepository etapaEmUsoRepository;
-    public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository, UsuarioRepository usuarioRepository,EtapaEmUsoRepository etapaEmUsoRepository) {
+    private final TokenJWTService tokenJWTService;
+
+    public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository,
+                          UsuarioRepository usuarioRepository,EtapaEmUsoRepository etapaEmUsoRepository, TokenJWTService tokenJWTService) {
         this.projetoRepository = projetoRepository;
         this.etapaRepository = etapaRepository;
         this.perguntaRepository = perguntaRepository;
         this.usuarioRepository = usuarioRepository;
         this.etapaEmUsoRepository = etapaEmUsoRepository;
+        this.tokenJWTService = tokenJWTService;
     }
 
     @Transactional
@@ -116,35 +121,54 @@ public class ProjetoService {
     }
 
     public Page<ProjetoSimplesDetalhamentoDTO> listarProjetoPorUsuario(Pageable paginacao, Long usuarioid) {
+        if(usuarioid == null) {
+            String subject = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
+            Usuario usuario = usuarioRepository.findByLogin(subject);
+            usuarioid = usuario.getId();
+        }
         List<Projeto> projetosAssociados = projetoRepository.findProjetosByUsuarioId(usuarioid);
         List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
 
         for (Projeto proj : projetosAssociados){
             List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuarioid, proj.getId());
-            if (listaEtapaEmUso.isEmpty()) {
-                continue;
-            }
-            String status = "EM ANDAMENTO";
-            int concluidos = (int) listaEtapaEmUso.stream()
-                    .filter(etapa -> etapa.getStatusEtapaEmUso().equals(StatusEnum.CONCLUIDO))
-                    .count();
-            boolean todasConcluidas = listaEtapaEmUso.stream()
-                    .allMatch(etapa -> etapa.getStatusEtapaEmUso().equals(StatusEnum.CONCLUIDO));
-            boolean primeiroNaoIniciado = listaEtapaEmUso.get(0).getStatusEtapaEmUso().equals(StatusEnum.NAO_INICIADO);
-            Date dataInicio = listaEtapaEmUso.get(0).getCreatedAt();
-            Date datafim = todasConcluidas ? listaEtapaEmUso.get(listaEtapaEmUso.size() - 1).getUpdatedAt() : null;
-            if(todasConcluidas){
-                status = "CONCLUÍDO";
-            }
-            if(primeiroNaoIniciado){
-                status = "NÃO INICIADO";
-                dataInicio = null;
-            }
-            retorno.add(new ProjetoSimplesDetalhamentoDTO(proj, status, concluidos, dataInicio, datafim));
+            geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso);
         }
         return new PageImpl<>(retorno, paginacao, retorno.size());
     }
 
+    public Page<ProjetoSimplesDetalhamentoDTO> acompanharProjetos(Pageable paginacao) {
+        List<Projeto> projetosAssociados = projetoRepository.findAll();
+        List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
+
+        for (Projeto proj : projetosAssociados){
+            List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByProjetoId(proj.getId());
+            geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso);
+        }
+        return new PageImpl<>(retorno, paginacao, retorno.size());
+    }
+
+    public void geraDetalhamentoProjeto(List<ProjetoSimplesDetalhamentoDTO> retorno, Projeto proj, List<EtapaEmUso> listaEtapaEmUso) {
+        if (listaEtapaEmUso.isEmpty()) {
+            return;
+        }
+        String status = "EM ANDAMENTO";
+        int concluidos = (int) listaEtapaEmUso.stream()
+                .filter(etapa -> etapa.getStatusEtapaEmUso().equals(StatusEnum.CONCLUIDO))
+                .count();
+        boolean todasConcluidas = listaEtapaEmUso.stream()
+                .allMatch(etapa -> etapa.getStatusEtapaEmUso().equals(StatusEnum.CONCLUIDO));
+        boolean primeiroNaoIniciado = listaEtapaEmUso.get(0).getStatusEtapaEmUso().equals(StatusEnum.NAO_INICIADO);
+        Date dataInicio = listaEtapaEmUso.get(0).getCreatedAt();
+        Date datafim = todasConcluidas ? listaEtapaEmUso.get(listaEtapaEmUso.size() - 1).getUpdatedAt() : null;
+        if(todasConcluidas){
+            status = "CONCLUÍDO";
+        }
+        if(primeiroNaoIniciado){
+            status = "NÃO INICIADO";
+            dataInicio = null;
+        }
+        retorno.add(new ProjetoSimplesDetalhamentoDTO(proj, status, concluidos, dataInicio, datafim));
+    }
 
 
 }

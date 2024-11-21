@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +31,12 @@ public class EtapaEmUso extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "statusEtapaEmUso")
     private StatusEnum statusEtapaEmUso;
+
+    @OneToMany(mappedBy = "etapaEmUso", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RespostasEtapaEmUso> respostasEtapaEmUso;
+    public List<RespostasEtapaEmUso> getRespostasEtapaEmUso() {
+        return respostasEtapaEmUso != null ? respostasEtapaEmUso : List.of();
+    }
 
     public EtapaEmUso(EtapaProjeto etapaProjeto, Usuario usuario){
         this.usuario = usuario;

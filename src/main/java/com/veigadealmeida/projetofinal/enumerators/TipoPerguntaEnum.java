@@ -3,9 +3,7 @@ package com.veigadealmeida.projetofinal.enumerators;
 public enum TipoPerguntaEnum {
     STRING("Texto"),
     MULTIPLA_ESCOLHA("Múltipla Escolha"),
-    NUMERICO("Numérico"),
-    ARQUIVO("Arquivo");
-
+    NUMERICO("Numérico");
     private final String descricao;
 
     TipoPerguntaEnum(String descricao) {
