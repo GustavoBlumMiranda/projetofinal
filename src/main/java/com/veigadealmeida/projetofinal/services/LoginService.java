@@ -5,6 +5,7 @@ import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.BadRequestException;
 import com.veigadealmeida.projetofinal.domain.Usuario;
 import com.veigadealmeida.projetofinal.dto.usuario.DadosLoginUsuario;
+import com.veigadealmeida.projetofinal.dto.usuario.RetornoLoginDTO;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,13 @@ public class LoginService {
         this.tokenJWTService = tokenJWTService;
     }
 
-    public DTOTokenJWT efetuaLogin(DadosLoginUsuario dadosLoginUsuario) {
+    public RetornoLoginDTO efetuaLogin(DadosLoginUsuario dadosLoginUsuario) {
         var tokenAutenticacao = new UsernamePasswordAuthenticationToken(dadosLoginUsuario.login(), dadosLoginUsuario.senha());
 
         try {
             var autenticacao = manager.authenticate(tokenAutenticacao);
             var tokenJWT = tokenJWTService.gerarToken((Usuario) autenticacao.getPrincipal());
-            return new DTOTokenJWT(tokenJWT);
+            return new RetornoLoginDTO((Usuario) autenticacao.getPrincipal(), tokenJWT);
         } catch (BadRequestException ex) {
             throw new BadRequestException("Falha ao realizar o login. Usuário ou senha incorretos");
         }
