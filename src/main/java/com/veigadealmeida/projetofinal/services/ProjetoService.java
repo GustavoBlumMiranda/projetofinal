@@ -97,6 +97,24 @@ public class ProjetoService {
 
     }
 
+    public Page<ProjetoDetalhamentoDTO> listarProjetosSemAssociacao(Pageable paginacao) {
+        return projetoRepository.findAllByUsuariosIsNull(paginacao).map(ProjetoDetalhamentoDTO::new);
+    }
+
+    @Transactional
+    public ProjetoDetalhamentoDTO editarProjeto(AlteraProjetoDTO alteraProjetoDTO) {
+        Projeto projeto = projetoRepository.findById(alteraProjetoDTO.id())
+                .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + alteraProjetoDTO.id() + " não encontrado."));
+
+        if (projeto.getUsuarios() != null && !projeto.getUsuarios().isEmpty()) {
+            throw new IllegalStateException("Projetos com usuários associados não podem ser editados.");
+        }
+
+        projeto.setTitulo(alteraProjetoDTO.titulo());
+        projetoRepository.save(projeto);
+        return new ProjetoDetalhamentoDTO(projeto);
+    }
+
     @Transactional
     public ResponseEntity<String> associarUsuarioAoProjeto(Long projetoId, Long usuarioId) {
         Projeto projeto = projetoRepository.findById(projetoId)

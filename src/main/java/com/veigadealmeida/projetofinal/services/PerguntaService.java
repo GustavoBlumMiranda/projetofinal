@@ -1,6 +1,10 @@
 package com.veigadealmeida.projetofinal.services;
+import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
 import com.veigadealmeida.projetofinal.domain.Pergunta;
 import com.veigadealmeida.projetofinal.domain.*;
+import com.veigadealmeida.projetofinal.dto.opcaoresposta.AlterarOpcaoRespostaDTO;
+import com.veigadealmeida.projetofinal.dto.opcaoresposta.OpcaoRespostaDetalhamentoDTO;
+import com.veigadealmeida.projetofinal.dto.pergunta.AlterarPerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
@@ -48,20 +52,6 @@ public class PerguntaService {
     }
 
     @Transactional
-    public PerguntaDetalhamentoDTO atualizarPergunta(Long id, PerguntaDTO perguntaDTO) {
-        Pergunta pergunta = perguntaRepository.findById(id).get();
-        pergunta.setDescricaoPergunta(perguntaDTO.descricaoPergunta());
-        if (perguntaDTO.opcoesResposta() != null && perguntaDTO.opcoesResposta().isEmpty()) {
-            pergunta.setOpcoesResposta(
-                    perguntaDTO.opcoesResposta().stream()
-                            .map(opcaoRespostaDTO -> new OpcaoResposta(opcaoRespostaDTO, pergunta))
-                            .collect(Collectors.toList())
-            );
-        }
-        return new PerguntaDetalhamentoDTO(perguntaRepository.save(pergunta));
-    }
-
-    @Transactional
     public ResponseEntity<String> responderPergunta(RespostaPerguntaDTO respostaPerguntaDTO) {
         Pergunta pergunta = perguntaRepository.findById(respostaPerguntaDTO.perguntaId()).get();
         EtapaEmUso etapaEmUso = etapaEmUsoRepository.findById(respostaPerguntaDTO.etapaEmUsoId()).get();
@@ -90,6 +80,43 @@ public class PerguntaService {
         return ResponseEntity.ok("Pergunta Respondida com sucesso!");
     }
 
+
+    @Transactional
+    public PerguntaDetalhamentoDTO editarPergunta(AlterarPerguntaDTO alterarPerguntaDTO) {
+        Pergunta pergunta = perguntaRepository.findById(alterarPerguntaDTO.id())
+                .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + alterarPerguntaDTO.id() + " não encontrada."));
+
+        boolean usuariosAssociados = pergunta.getEtapas().stream()
+                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaId(perguntaEtapa.getEtapa().getId()));
+
+        if (usuariosAssociados) {
+            throw new IllegalStateException("Perguntas associadas a etapas com usuários não podem ser editadas.");
+        }
+
+        pergunta.setDescricaoPergunta(alterarPerguntaDTO.descricaoPergunta());
+
+        perguntaRepository.save(pergunta);
+        return new PerguntaDetalhamentoDTO(pergunta);
+    }
+
+    @Transactional
+    public OpcaoRespostaDetalhamentoDTO editarOpcaoResposta(AlterarOpcaoRespostaDTO alterarOpcaoRespostaDTO) {
+        OpcaoResposta opcaoResposta = opcaoRespostaRepository.findById(alterarOpcaoRespostaDTO.opcaoRespostaId())
+                .orElseThrow(() -> new EntityNotFoundException("OpcaoResposta com ID " + alterarOpcaoRespostaDTO.opcaoRespostaId() + " não encontrada."));
+
+        Pergunta pergunta = opcaoResposta.getPergunta();
+        boolean usuariosAssociados = pergunta.getEtapas().stream()
+                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaId(perguntaEtapa.getEtapa().getId()));
+
+        if (usuariosAssociados) {
+            throw new IllegalStateException("Opções de resposta associadas a etapas com usuários não podem ser editadas.");
+        }
+
+        opcaoResposta.setResposta(alterarOpcaoRespostaDTO.opcaoResposta());
+
+        opcaoRespostaRepository.save(opcaoResposta);
+        return new OpcaoRespostaDetalhamentoDTO(opcaoResposta);
+    }
 
 
 

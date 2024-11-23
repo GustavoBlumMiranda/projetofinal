@@ -30,9 +30,5 @@ public class Etapa extends BaseEntity{
     public Etapa(EtapaCadastroDTO etapaCadastroDTO){
         this.titulo = etapaCadastroDTO.nomeEtapa();
     }
-    public Etapa(Long id) {
-        this.id = id;
-    }
-
 
 }

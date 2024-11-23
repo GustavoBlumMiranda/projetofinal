@@ -1,6 +1,8 @@
 package com.veigadealmeida.projetofinal.controller;
 
 import com.veigadealmeida.projetofinal.dto.etapa.*;
+import com.veigadealmeida.projetofinal.dto.projeto.AlteraProjetoDTO;
+import com.veigadealmeida.projetofinal.dto.projeto.ProjetoDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.services.EtapaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -47,19 +49,12 @@ public class EtapaController {
         return ResponseEntity.ok(etapaDetalhamentoDTO);
     }
 
-    /*@PutMapping("/alterarOrdemPerguntas")
-    @Operation(summary = "Mudança de ordem das perguntas", description = "Altera a ordem da pergunta dentro do Template Etapa", tags = {"EtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity alterarOrdemPerguntaEtapa(@RequestBody @Valid List<AlterarOrdemPerguntaEtapaDTO> listaAlterarOrdemPerguntaEtapaDTO){
-        List<Optional<PerguntaEtapa>> perguntaEtapas = templateEtapaService.alterarOrdemPerguntaEtapa(listaAlterarOrdemPerguntaEtapaDTO);
-        return ResponseEntity.ok(perguntaEtapas);
-    }*/
-
-    /*@PutMapping("/editartitulo")
-    @Operation(summary = "Alterar Titulo da Etapa", description = "Edição do titulo do Template Etapa", tags = {"EtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity editarTituloEtapa(@RequestBody @Valid EditarTituloEtapaDTO editarTituloEtapaDTO){
-        EtapaTemplateDetalhamentoDTO etapaTemplateDetalhamentoDTO = templateEtapaService.editarTituloEtapa(editarTituloEtapaDTO);
-        return ResponseEntity.ok(etapaTemplateDetalhamentoDTO);
-    } */
+    @PutMapping("/editar")
+    @Operation(summary = "Altera dados de uma Etapa", description = "Altera dados de uma etapa", tags = {"EtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<EtapaDetalhamentoDTO> editarEtapa(@RequestBody AlteraEtapaDTO alteraEtapaDTO){
+        EtapaDetalhamentoDTO etapaDetalhamentoDTO = etapaService.editarEtapa(alteraEtapaDTO);
+        return ResponseEntity.ok(etapaDetalhamentoDTO);
+    }
 
 
 

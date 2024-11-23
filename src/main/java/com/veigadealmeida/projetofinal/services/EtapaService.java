@@ -2,12 +2,12 @@ package com.veigadealmeida.projetofinal.services;
 
 
 import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
-import com.veigadealmeida.projetofinal.domain.Etapa;
-import com.veigadealmeida.projetofinal.domain.Pergunta;
-import com.veigadealmeida.projetofinal.domain.PerguntaEtapa;
+import com.veigadealmeida.projetofinal.domain.*;
+import com.veigadealmeida.projetofinal.dto.etapa.AlteraEtapaDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
+import com.veigadealmeida.projetofinal.repository.EtapaEmUsoRepository;
 import com.veigadealmeida.projetofinal.repository.EtapaRepository;
 import com.veigadealmeida.projetofinal.repository.PerguntaRepository;
 import jakarta.transaction.Transactional;
@@ -16,17 +16,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
-
 @Service
 public class EtapaService {
 
-   private EtapaRepository etapaRepository;
-   private PerguntaRepository perguntaRepository;
+   private final EtapaRepository etapaRepository;
+   private final PerguntaRepository perguntaRepository;
+   private final EtapaEmUsoRepository etapaEmUsoRepository;
 
-    public EtapaService(EtapaRepository etapaRepository, PerguntaRepository perguntaRepository){
+    public EtapaService(EtapaRepository etapaRepository, PerguntaRepository perguntaRepository, EtapaEmUsoRepository etapaEmUsoRepository){
         this.etapaRepository = etapaRepository;
         this.perguntaRepository = perguntaRepository;
-
+        this.etapaEmUsoRepository = etapaEmUsoRepository;
     }
 
     @Transactional
@@ -53,7 +53,8 @@ public class EtapaService {
     }
 
     public EtapaDetalhamentoDTO buscar(Long id) {
-        return new EtapaDetalhamentoDTO(etapaRepository.findById(id).get());
+        return new EtapaDetalhamentoDTO(etapaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Etapa com ID " + id + " não encontrada.")));
 
     }
 
@@ -62,76 +63,20 @@ public class EtapaService {
 
     }
 
-
-    /*@Transactional
-    public List<Optional<PerguntaEtapa>> alterarOrdemPerguntaEtapa(List<AlterarOrdemPerguntaEtapaDTO> listaAlterarOrdemPerguntaEtapaDTO){
-        List<Optional<PerguntaEtapa>> perguntaEtapas = new ArrayList<>();
-        perguntaEtapas.clear();
-        for(AlterarOrdemPerguntaEtapaDTO dto : listaAlterarOrdemPerguntaEtapaDTO){
-            Optional<PerguntaEtapa> perguntaEtapa = perguntaEtapaRepository.findById(dto.getId());
-            perguntaEtapa.get().setOrdem(dto.getOrdem());
-            perguntaEtapa.get().setUpdate(perguntaEtapa.get());
-            perguntaEtapas.add(perguntaEtapa);
-        }
-        return  perguntaEtapas;
-    }
-
     @Transactional
-    public EtapaTemplateDetalhamentoDTO editarTituloEtapa(EditarTituloEtapaDTO editarTituloEtapaDTO){
-        Etapa etapa = etapaRepository.findById(editarTituloEtapaDTO.id()).orElseThrow(() -> new ObjectNotFoundException("Id da etapa fornecido não encontrado: " + editarTituloEtapaDTO.id() + "."));
-        etapa.setUpdate(etapa);
-        etapa.editarTituloEtapa(editarTituloEtapaDTO);
-        return new EtapaTemplateDetalhamentoDTO(etapa);
-    }
+    public EtapaDetalhamentoDTO editarEtapa(AlteraEtapaDTO alteraEtapaDTO) {
+        Etapa etapa = etapaRepository.findById(alteraEtapaDTO.id())
+                .orElseThrow(() -> new EntityNotFoundException("Etapa com ID " + alteraEtapaDTO.id() + " não encontrada."));
 
-    public Page listarEtapas(Pageable paginacao) {
-        var page = etapaRepository.findAll(paginacao).map(EtapaTemplateDetalhamentoDTO::new);
-        return page;
-    }
+        boolean possuiUsuariosAssociados = etapaEmUsoRepository.existsByEtapaId(etapa.getId());
 
-    public List<EtapaTemplateDetalhamentoDTO> listaTemplateEtapasPorTemplateProjeto(Long idTemplateProjeto) {
-        List<EtapaProjeto> listaEtapaProjeto = etapaTemplateProjetoRepository.findAllByTemplateProjetoId(idTemplateProjeto);
-        List<EtapaTemplateDetalhamentoDTO> etapaTemplateDetalhamentoDTOList = this.toEtapaTemplateDetalhamentoDTOList(listaEtapaProjeto);
-        return etapaTemplateDetalhamentoDTOList;
-    }
-
-    public static List<EtapaTemplateDetalhamentoDTO> toEtapaTemplateDetalhamentoDTOList(List<EtapaProjeto> etapasTemplateProjeto) {
-        return etapasTemplateProjeto.stream()
-                .map(etapaTemplateProjeto -> new EtapaTemplateDetalhamentoDTO(etapaTemplateProjeto.getEtapa()))
-                .collect(Collectors.toList());
-    }
-
-    public List<EtapaTemplateDetalhamentoDTO> listaTemplateEtapasPorProjeto(Long idProjeto) {
-        TemplateProjeto templateProjeto = projetoRepository.findById(idProjeto)
-                .map(Projeto::getTemplateProjeto)
-                .orElseThrow(() -> new ObjectNotFoundException("TemplateProjeto não encontrado"));
-
-        return listaTemplateEtapasPorTemplateProjeto(templateProjeto.getId());
-    }
-
-   *//* public List<Long> getPerguntasEmLoop(List<Long> idPerguntas) {
-        List<Long> perguntasEmLoop = new ArrayList<>();
-        Set<Long> idsVisitados = new HashSet<>();
-
-        for (Long idPergunta : idPerguntas) {
-            if (!idsVisitados.add(idPergunta)) {
-                perguntasEmLoop.add(idPergunta);
-                continue;
-            }
-
-            Pergunta pergunta = perguntaRepository.findById(idPergunta).orElse(null);
-            if (pergunta != null && pergunta.getTipoResposta().getId() == 2) {
-                List<OpcaoResposta> opcoesResposta = opcaoRespostaRepository.findByPergunta(pergunta);
-                for (OpcaoResposta opcaoResposta : opcoesResposta) {
-                    if (opcaoResposta.getProximaPergunta() != null) {
-                        Long proximaPerguntaId = opcaoResposta.getProximaPergunta().getId();
-                        if (!idsVisitados.add(proximaPerguntaId)) {
-                            perguntasEmLoop.add(proximaPerguntaId);
-                        }
-                    }
-                }
-            }
+        if (possuiUsuariosAssociados) {
+            throw new IllegalStateException("Etapas com usuários associados não podem ser editadas.");
         }
-        return perguntasEmLoop;
-    }*/
+
+        etapa.setTitulo(alteraEtapaDTO.titulo());
+        etapa = etapaRepository.save(etapa);
+
+        return new EtapaDetalhamentoDTO(etapa);
+    }
 }

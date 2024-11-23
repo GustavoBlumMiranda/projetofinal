@@ -23,7 +23,6 @@ public class EtapaProjeto extends BaseEntity{
     private Projeto projeto;
 
     private Integer ordemEtapa;
-    private String justificativa;
 
     public EtapaProjeto(Projeto projeto, Etapa etapa, Integer ordem) {
         this.projeto = projeto;

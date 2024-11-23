@@ -33,10 +33,18 @@ public class ProjetoController {
 
     @GetMapping("/listar")
     @Operation(summary = "Listagem dos Projetos", description = "Realiza a listagem paginada dos projetos existentes", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<Page<ProjetoDetalhamentoDTO>> listarProjetos(@PageableDefault(sort = {"id"}) Pageable paginacao){
+    public ResponseEntity<Page<ProjetoDetalhamentoDTO>> listarProjetosSemAssociacao(@PageableDefault(sort = {"id"}) Pageable paginacao){
         var page = projetoService.listarProjetos(paginacao);
         return ResponseEntity.ok(page);
     }
+
+    @GetMapping("/listarsemusuario")
+    @Operation(summary = "Listagem dos Projetos", description = "Realiza a listagem paginada dos projetos existentes", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<Page<ProjetoDetalhamentoDTO>> listarProjetos(@PageableDefault(sort = {"id"}) Pageable paginacao){
+        var page = projetoService.listarProjetosSemAssociacao(paginacao);
+        return ResponseEntity.ok(page);
+    }
+
     @GetMapping("/buscar/{id}")
     @Operation(summary = "Buscar um Projetos", description = "Realiza a busca de um Projetos por ID", tags = {"ProjetoController"})
     public ResponseEntity<ProjetoDetalhamentoDTO> buscaProjetoPorId(@PathVariable(value = "id") long id){
@@ -71,12 +79,12 @@ public class ProjetoController {
         return ResponseEntity.ok(projetos);
     }
 
-    /*@PutMapping("/alterar")
+    @PutMapping("/editar")
     @Operation(summary = "Altera dados de um projeto", description = "Altera dados de um projeto", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<ProjetoDetalhamentoDTO> alteraProjeto(@RequestBody AlteraProjetoDTO alterarProjetoDTO){
-        ProjetoDetalhamentoDTO projetoDetalhamentoDTO = projetoService.alteraProjeto(alterarProjetoDTO);
+    public ResponseEntity<ProjetoDetalhamentoDTO> editarProjeto(@RequestBody AlteraProjetoDTO alterarProjetoDTO){
+        ProjetoDetalhamentoDTO projetoDetalhamentoDTO = projetoService.editarProjeto(alterarProjetoDTO);
         return ResponseEntity.ok(projetoDetalhamentoDTO);
-    }*/
+    }
 
 
 }

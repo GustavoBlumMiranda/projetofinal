@@ -21,5 +21,10 @@ public interface EtapaEmUsoRepository extends JpaRepository<EtapaEmUso, Long> {
             "JOIN ep.projeto p " +
             "WHERE e.usuario.id != null AND p.id = :projetoId")
     List<EtapaEmUso> findByProjetoId(@Param("projetoId") Long projetoId);
+
+    @Query("SELECT COUNT(eu) > 0 " +
+            "FROM EtapaEmUso eu " +
+            "WHERE eu.etapaProjeto.etapa.id = :idEtapa")
+    boolean existsByEtapaId(@Param("idEtapa") Long idEtapa);
 }
 
