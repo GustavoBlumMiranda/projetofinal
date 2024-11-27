@@ -6,6 +6,5 @@ import java.util.List;
 
 public record ProjetoCadastroDTO(
         String titulo,
-        String descricaoProjeto,
         List<EtapaCadastroDTO> etapas
 ) {}

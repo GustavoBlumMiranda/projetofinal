@@ -31,7 +31,7 @@ public class Pergunta extends BaseEntity{
 
     @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OpcaoResposta> opcoesResposta = new ArrayList<>();
-    @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pergunta", orphanRemoval = false)
     private List<PerguntaEtapa> etapas = new ArrayList<>();
 
     public Pergunta(PerguntaDTO perguntaDTO){

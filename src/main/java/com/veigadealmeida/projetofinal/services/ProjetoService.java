@@ -29,20 +29,25 @@ public class ProjetoService {
     private final UsuarioRepository usuarioRepository;
     private final EtapaEmUsoRepository etapaEmUsoRepository;
     private final TokenJWTService tokenJWTService;
+    private final EtapaProjetoRepository etapaProjetoRepository;
+    private final PerguntaEtapaRepository perguntaEtapaRepository;
 
     public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository,
-                          UsuarioRepository usuarioRepository,EtapaEmUsoRepository etapaEmUsoRepository, TokenJWTService tokenJWTService) {
+                          UsuarioRepository usuarioRepository,EtapaEmUsoRepository etapaEmUsoRepository, TokenJWTService tokenJWTService,
+                          EtapaProjetoRepository etapaProjetoRepository, PerguntaEtapaRepository perguntaEtapaRepository) {
         this.projetoRepository = projetoRepository;
         this.etapaRepository = etapaRepository;
         this.perguntaRepository = perguntaRepository;
         this.usuarioRepository = usuarioRepository;
         this.etapaEmUsoRepository = etapaEmUsoRepository;
         this.tokenJWTService = tokenJWTService;
+        this.etapaProjetoRepository = etapaProjetoRepository;
+        this.perguntaEtapaRepository = perguntaEtapaRepository;
     }
 
     @Transactional
     public ProjetoDetalhamentoDTO cadastrarProjeto(ProjetoCadastroDTO projetoDTO) {
-        Projeto projeto = new Projeto(projetoDTO); // Apenas inicializa os campos básicos do projeto
+        Projeto projeto = new Projeto(projetoDTO);
         Integer ordemEtapa = 0;
 
         for (EtapaCadastroDTO etapaDTO : projetoDTO.etapas()) {
@@ -120,8 +125,13 @@ public class ProjetoService {
         Projeto projeto = projetoRepository.findById(projetoId)
                 .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + projetoId + " não encontrado."));
 
+
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
+
+        if(projeto.getUsuarios().contains(usuario)){
+            throw new IllegalArgumentException("Usuário com ID " + usuarioId + " já está associado ao projeto com ID " + projetoId + ".");
+        }
 
         if (!projeto.getUsuarios().contains(usuario)) {
             projeto.getUsuarios().add(usuario);
@@ -187,6 +197,98 @@ public class ProjetoService {
         }
         retorno.add(new ProjetoSimplesDetalhamentoDTO(proj, status, concluidos, dataInicio, datafim));
     }
+
+    @Transactional
+    public AssocieacoesProjetoDetalhamentoDTO desassociarUsuario(Long projetoId, Long usuarioId) {
+        Projeto projeto = projetoRepository.findById(projetoId)
+                .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + projetoId + " não encontrado."));
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + usuarioId + " não encontrado."));
+
+        List<EtapaEmUso> etapasEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuarioId, projetoId);
+        etapaEmUsoRepository.saveAll(
+                etapasEmUso.stream()
+                        .peek(etapaEmUso -> etapaEmUso.setUsuario(null))
+                        .toList()
+        );
+
+        if (!projeto.getUsuarios().remove(usuario)) {
+            throw new IllegalArgumentException("Usuário com ID " + usuarioId + " não está associado ao projeto com ID " + projetoId + ".");
+        }
+
+        projetoRepository.save(projeto);
+
+        return new AssocieacoesProjetoDetalhamentoDTO(projeto);
+    }
+
+    @Transactional
+    public void excluirProjeto(Long projetoId) {
+        try {
+            Projeto projeto = projetoRepository.findById(projetoId)
+                    .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + projetoId + " não encontrado."));
+            validarProjetoParaExclusao(projeto);
+            for (EtapaProjeto etapaProjeto : projeto.getEtapasProjeto()) {
+                Etapa etapa = etapaProjeto.getEtapa();
+
+                etapaProjetoRepository.delete(etapaProjeto);
+
+                boolean etapaEmUsoPorOutroProjeto = etapa.getProjetos().stream()
+                        .anyMatch(ep -> !ep.getProjeto().getId().equals(projetoId));
+
+                if (!etapaEmUsoPorOutroProjeto) {
+                    for (PerguntaEtapa perguntaEtapa : etapa.getPerguntasEtapa()) {
+                        Pergunta pergunta = perguntaEtapa.getPergunta();
+
+                        perguntaEtapaRepository.delete(perguntaEtapa);
+
+                        boolean perguntaEmUso = pergunta.getEtapas().stream()
+                                .anyMatch(pe -> !pe.getEtapa().getId().equals(etapa.getId()));
+
+                        if (!perguntaEmUso) {
+                            perguntaRepository.delete(pergunta);
+                        }
+                    }
+                    etapaRepository.delete(etapa);
+                }
+            }
+
+            projetoRepository.delete(projeto);
+        } catch (Exception e) {
+            throw new IllegalStateException("Erro ao excluir o projeto. Operação abortada.", e);
+        }
+    }
+
+
+    @Transactional
+    public void validarProjetoParaExclusao(Projeto projeto) {
+
+        if (projeto.getUsuarios() != null && !projeto.getUsuarios().isEmpty()) {
+            throw new IllegalStateException("Projetos com usuários associados não podem ser excluídos.");
+        }
+
+        boolean etapasComUsuariosAssociados = projeto.getEtapasProjeto().stream()
+                .map(EtapaProjeto::getEtapa)
+                .anyMatch(etapa -> etapa.getProjetos().stream()
+                        .anyMatch(etapaProjeto -> etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(etapaProjeto.getId())));
+
+        if (etapasComUsuariosAssociados) {
+            throw new IllegalStateException("Etapas associadas a outros projetos com usuários não podem ser excluídas.");
+        }
+
+        boolean perguntasComUsuariosAssociados = projeto.getEtapasProjeto().stream()
+                .map(EtapaProjeto::getEtapa)
+                .flatMap(etapa -> etapa.getPerguntasEtapa().stream())
+                .map(PerguntaEtapa::getPergunta)
+                .anyMatch(pergunta -> pergunta.getEtapas().stream()
+                        .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(perguntaEtapa.getEtapa().getId())));
+
+        if (perguntasComUsuariosAssociados) {
+            throw new IllegalStateException("Perguntas associadas a etapas de projetos com usuários não podem ser excluídas.");
+        }
+    }
+
+
 
 
 }

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PerguntaService {
@@ -87,7 +86,7 @@ public class PerguntaService {
                 .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + alterarPerguntaDTO.id() + " não encontrada."));
 
         boolean usuariosAssociados = pergunta.getEtapas().stream()
-                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaId(perguntaEtapa.getEtapa().getId()));
+                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(perguntaEtapa.getEtapa().getId()));
 
         if (usuariosAssociados) {
             throw new IllegalStateException("Perguntas associadas a etapas com usuários não podem ser editadas.");
@@ -106,7 +105,7 @@ public class PerguntaService {
 
         Pergunta pergunta = opcaoResposta.getPergunta();
         boolean usuariosAssociados = pergunta.getEtapas().stream()
-                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaId(perguntaEtapa.getEtapa().getId()));
+                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(perguntaEtapa.getEtapa().getId()));
 
         if (usuariosAssociados) {
             throw new IllegalStateException("Opções de resposta associadas a etapas com usuários não podem ser editadas.");

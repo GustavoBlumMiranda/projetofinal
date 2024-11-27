@@ -20,7 +20,7 @@ public class PerguntaEtapa extends BaseEntity{
     @JoinColumn(name = "etapaId")
     private Etapa etapa;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "perguntaId")
     private Pergunta pergunta;
 

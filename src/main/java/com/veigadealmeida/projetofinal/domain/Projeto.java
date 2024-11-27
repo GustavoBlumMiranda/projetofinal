@@ -26,10 +26,6 @@ public class Projeto extends BaseEntity{
 
     private String titulo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "statusProjeto")
-    private StatusEnum statusProjeto;
-
 
     @ManyToMany
     @JoinTable(
@@ -41,7 +37,6 @@ public class Projeto extends BaseEntity{
 
     public Projeto(ProjetoCadastroDTO projetoDTO) {
         this.titulo = projetoDTO.titulo();
-        this.statusProjeto = StatusEnum.NAO_INICIADO;
     }
 
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true)

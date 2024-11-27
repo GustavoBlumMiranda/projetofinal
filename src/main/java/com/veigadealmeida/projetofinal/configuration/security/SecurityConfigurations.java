@@ -32,7 +32,8 @@ public class SecurityConfigurations {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()// Permite a rota /login para todos
+                .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated() // Requer autenticação para todas as outras requisições
                 .and().cors()
                 .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

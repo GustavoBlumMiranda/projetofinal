@@ -52,10 +52,10 @@ public class ProjetoController {
         return ResponseEntity.ok(projetoDetalhamentoDTO);
     }
 
-    @PostMapping("/associarusuario")
+    @PostMapping("/associarusuario/{idProjeto}/{idUsuario}")
     @Operation(summary = "Associar Usuário ao Projeto", description = "Associa um usuário existente a um projeto existente", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity<String> associarUsuarioAoProjeto(@RequestParam Long projetoId, @RequestParam Long usuarioId) {
-        return projetoService.associarUsuarioAoProjeto(projetoId, usuarioId);
+    public ResponseEntity<String> associarUsuarioAoProjeto(@PathVariable(value = "idProjeto") Long idProjeto, @PathVariable(value = "idUsuario") Long idUsuario) {
+        return projetoService.associarUsuarioAoProjeto(idProjeto, idUsuario);
     }
 
     @GetMapping("/acompanharporusuario/{usuarioId}")
@@ -84,6 +84,20 @@ public class ProjetoController {
     public ResponseEntity<ProjetoDetalhamentoDTO> editarProjeto(@RequestBody AlteraProjetoDTO alterarProjetoDTO){
         ProjetoDetalhamentoDTO projetoDetalhamentoDTO = projetoService.editarProjeto(alterarProjetoDTO);
         return ResponseEntity.ok(projetoDetalhamentoDTO);
+    }
+
+    @DeleteMapping("/desassociar/{idProjeto}/{idUsuario}")
+    @Operation(summary = "Desassocia usuario de um projeto", description = "Desassocia usuario de um projeto", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<AssocieacoesProjetoDetalhamentoDTO> desassociarUsuario(@PathVariable(value = "idProjeto") long idProjeto, @PathVariable(value = "idUsuario") long idUsuario){
+        AssocieacoesProjetoDetalhamentoDTO associeacoesProjetoDetalhamentoDTO = projetoService.desassociarUsuario(idProjeto, idUsuario);
+        return ResponseEntity.ok(associeacoesProjetoDetalhamentoDTO);
+    }
+
+    @DeleteMapping("/excluir/{idProjeto}")
+    @Operation(summary = "Exclui um projeto", description = "Exclui um projeto desde que não tenha usuários associados ou dependências inválidas", tags = {"ProjetoController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<Void> excluirProjeto(@PathVariable(value = "idProjeto") long idProjeto) {
+        projetoService.excluirProjeto(idProjeto);
+        return ResponseEntity.noContent().build();
     }
 
 

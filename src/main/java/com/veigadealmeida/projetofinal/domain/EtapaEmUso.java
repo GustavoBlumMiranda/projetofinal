@@ -38,8 +38,13 @@ public class EtapaEmUso extends BaseEntity{
         return respostasEtapaEmUso != null ? respostasEtapaEmUso : List.of();
     }
 
+    @ManyToOne
+    @JoinColumn(name = "usuarioHistorico")
+    private Usuario usuarioHistorico;
+
     public EtapaEmUso(EtapaProjeto etapaProjeto, Usuario usuario){
         this.usuario = usuario;
+        this.usuarioHistorico = usuario;
         this.etapaProjeto = etapaProjeto;
         this.statusEtapaEmUso = StatusEnum.NAO_INICIADO;
     }

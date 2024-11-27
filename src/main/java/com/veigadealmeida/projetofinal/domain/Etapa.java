@@ -22,10 +22,10 @@ public class Etapa extends BaseEntity{
 
     private String titulo;
 
-    @OneToMany(mappedBy = "etapa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "etapa", cascade = CascadeType.PERSIST)
     private List<PerguntaEtapa> perguntasEtapa = new ArrayList<>();
 
-    @OneToMany(mappedBy = "etapa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "etapa", orphanRemoval = false)
     private List<EtapaProjeto> projetos = new ArrayList<>();
     public Etapa(EtapaCadastroDTO etapaCadastroDTO){
         this.titulo = etapaCadastroDTO.nomeEtapa();

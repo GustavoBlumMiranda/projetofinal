@@ -34,18 +34,25 @@ public class RespostasEtapaEmUso extends BaseEntity{
 
     private Boolean respondida;
 
+    private String perguntaOriginal ;
+
+    private String respostaOriginal ;
+
     public RespostasEtapaEmUso(Pergunta pergunta, EtapaEmUso etapaEmUso, RespostaPerguntaDTO respostaPerguntaDTO, OpcaoResposta opcaoResposta) {
         this.pergunta = pergunta;
         this.etapaEmUso = etapaEmUso;
         this.respostaString = respostaPerguntaDTO.resposta();
         this.respostaNumerica = respostaPerguntaDTO.respostaNumerica();
         this.opcaoResposta = opcaoResposta;
+        perguntaOriginal = pergunta.getDescricaoPergunta();
         respondida = true;
+        if (this.respostaString != null && !this.respostaString.isEmpty()) {
+            this.respostaOriginal = this.respostaString;
+        } else if (this.respostaNumerica != null) {
+            this.respostaOriginal = this.respostaNumerica.toString();
+        } else if (this.opcaoResposta != null) {
+            this.respostaOriginal = this.opcaoResposta.getResposta();
+        }
     }
-
-   /* public RespostasEtapaEmUso(RespostaPerguntaDTO respostaPerguntaDTO, Pergunta pergunta, OpcaoResposta opcaoResposta) {
-        this.pergunta =  pergunta;
-        this.
-    }*/
 
 }
