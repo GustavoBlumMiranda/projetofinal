@@ -29,4 +29,3 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Page<Usuario> findUsuariosDisponiveisParaAssociacao(Pageable pageable, @Param("projetoId") Long projetoId);
 }
 
-}
