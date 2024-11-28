@@ -29,7 +29,7 @@ public class EtapaService {
         this.etapaEmUsoRepository = etapaEmUsoRepository;
     }
 
-    @Transactional
+    /*@Transactional
     public EtapaDetalhamentoDTO cadastrarEtapa(EtapaCadastroDTO etapaCadastroDTO) {
         Etapa etapa = new Etapa(etapaCadastroDTO);
         Integer ordemPergunta = 0;
@@ -50,7 +50,7 @@ public class EtapaService {
         }
         etapa = etapaRepository.save(etapa);
         return new EtapaDetalhamentoDTO(etapa);
-    }
+    }*/
 
     public EtapaDetalhamentoDTO buscar(Long id) {
         return new EtapaDetalhamentoDTO(etapaRepository.findById(id)

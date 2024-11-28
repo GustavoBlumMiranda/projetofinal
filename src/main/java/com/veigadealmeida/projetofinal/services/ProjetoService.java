@@ -49,11 +49,9 @@ public class ProjetoService {
     public ProjetoDetalhamentoDTO cadastrarProjeto(ProjetoCadastroDTO projetoDTO) {
         Projeto projeto = new Projeto(projetoDTO);
         Integer ordemEtapa = 0;
-
         for (EtapaCadastroDTO etapaDTO : projetoDTO.etapas()) {
             ordemEtapa++;
             Etapa etapa;
-
             if (etapaDTO.id() != null) {
                 etapa = etapaRepository.findById(etapaDTO.id())
                         .orElseThrow(() -> new EntityNotFoundException("Etapa com ID " + etapaDTO.id() + " não encontrada."));
@@ -76,14 +74,12 @@ public class ProjetoService {
                     } else {
                         pergunta = new Pergunta(perguntaCadastroDTO);
                     }
-
                     PerguntaEtapa perguntaEtapa = new PerguntaEtapa(etapa, pergunta, ordemPergunta);
                     etapa.getPerguntasEtapa().add(perguntaEtapa);
                     pergunta.getEtapas().add(perguntaEtapa);
                 }
             }
         }
-
         projeto = projetoRepository.save(projeto);
         return new ProjetoDetalhamentoDTO(projeto);
     }

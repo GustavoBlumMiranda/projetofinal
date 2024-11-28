@@ -3,10 +3,12 @@ package com.veigadealmeida.projetofinal.services;
 import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.BadRequestException;
 import com.veigadealmeida.projetofinal.controller.customexceptions.ObjectNotFoundException;
+import com.veigadealmeida.projetofinal.domain.Projeto;
 import com.veigadealmeida.projetofinal.domain.Usuario;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
+import com.veigadealmeida.projetofinal.repository.ProjetoRepository;
 import com.veigadealmeida.projetofinal.repository.UsuarioRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,13 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenJWTService tokenJWTService;
+    private final ProjetoRepository projetoRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, TokenJWTService tokenJWTService, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, TokenJWTService tokenJWTService, PasswordEncoder passwordEncoder, ProjetoRepository projetoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.tokenJWTService = tokenJWTService;
         this.passwordEncoder = passwordEncoder;
+        this.projetoRepository = projetoRepository;
     }
 
     public UsuarioDetalhamentoDTO getUsuarioPorId(Long id) {
@@ -47,6 +51,10 @@ public class UsuarioService {
 
     public Page listarUsuario(Pageable paginacao) {
         return usuarioRepository.findAll(paginacao).map(UsuarioDetalhamentoDTO::new);
+    }
+
+    public Page<Usuario> listarUsuariosDisponiveisParaAssociacao(Pageable paginacao, Long projetoId) {
+        return usuarioRepository.findUsuariosDisponiveisParaAssociacao(paginacao, projetoId);
     }
 
 

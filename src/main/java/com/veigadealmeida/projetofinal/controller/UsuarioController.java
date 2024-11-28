@@ -77,6 +77,15 @@ public class UsuarioController implements UserDetailsService {
 		return ResponseEntity.ok(page);
 	}
 
+	@GetMapping("/listardisponiveis/{projetoId}")
+	@Operation(summary = "Listagem de Usuários Disponíveis para Associação", description = "Realiza a listagem paginada dos usuários que não estão associados ao projeto especificado.", tags = {"UsuarioController"})
+	public ResponseEntity<Page<UsuarioDetalhamentoDTO>> listarUsuariosDisponiveisParaAssociacao(@PageableDefault(sort = {"id"}) Pageable paginacao, @PathVariable Long projetoId) {
+		var page = usuarioService.listarUsuariosDisponiveisParaAssociacao(paginacao, projetoId);
+		Page<UsuarioDetalhamentoDTO> usuariosDetalhados = page.map(usuario -> new UsuarioDetalhamentoDTO(usuario));
+		return ResponseEntity.ok(usuariosDetalhados);
+	}
+
+
 	@PutMapping("/editar")
 	@Operation(summary = "Edita usuário", description = "Realiza a edição de um usuário", tags = {"UsuarioController"})
 	public ResponseEntity<UsuarioDetalhamentoDTO> editaUsuario(@RequestBody @Valid UsuarioEditarDTO usuarioEditarDTO){

@@ -9,6 +9,7 @@ import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
+import com.veigadealmeida.projetofinal.enumerators.TipoUsuarioEnum;
 import com.veigadealmeida.projetofinal.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,12 +36,12 @@ public class PerguntaService {
         this.perguntaEtapaRepository = perguntaEtapaRepository;
     }
 
-    @Transactional
+    /*@Transactional
     public PerguntaDetalhamentoDTO cadastrarPergunta(PerguntaDTO perguntaDTO) {
         Pergunta pergunta = new Pergunta(perguntaDTO);
         pergunta = perguntaRepository.save(pergunta);
         return new PerguntaDetalhamentoDTO(pergunta);
-    }
+    }*/
 
     public Page<PerguntaDetalhamentoDTO> listarPerguntas(Pageable paginacao) {
         return perguntaRepository.findAll(paginacao).map(PerguntaDetalhamentoDTO::new);
@@ -55,6 +56,15 @@ public class PerguntaService {
         Pergunta pergunta = perguntaRepository.findById(respostaPerguntaDTO.perguntaId()).get();
         EtapaEmUso etapaEmUso = etapaEmUsoRepository.findById(respostaPerguntaDTO.etapaEmUsoId()).get();
         EtapaProjeto etapaProjeto = etapaEmUso.getEtapaProjeto();
+
+        Usuario usuario = etapaEmUso.getUsuario();
+
+        if (usuario.getTipoUsuario() == TipoUsuarioEnum.COLABORADOR) {
+            Projeto projeto = etapaProjeto.getProjeto();
+            if (!projeto.getUsuarios().contains(usuario)) {
+                throw new IllegalStateException("Usuário do tipo COLABORADOR não está associado a este projeto.");
+            }
+        }
 
         if (etapaEmUso.getStatusEtapaEmUso() == StatusEnum.NAO_INICIADO) {
             etapaEmUso.setStatusEtapaEmUso(StatusEnum.EM_ANDAMENTO);

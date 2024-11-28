@@ -29,14 +29,14 @@ public class PerguntaController {
         this.perguntaService = perguntaService;
     }
 
-    @PostMapping("/cadastrar")
+   /* @PostMapping("/cadastrar")
     @Transactional
     @Operation(summary = "Cadastro de Pergunta", description = "Realiza o cadastro de uma nova Pergunta", tags = {"PerguntaController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<PerguntaDetalhamentoDTO> cadastrarPergunta(@RequestBody @Valid PerguntaDTO perguntaDTO, UriComponentsBuilder uriComponentsBuilder) {
         PerguntaDetalhamentoDTO perguntaDetalhamentoDTO = perguntaService.cadastrarPergunta(perguntaDTO);
         var uri = uriComponentsBuilder.path("/pergunta/{id}").buildAndExpand(perguntaDetalhamentoDTO.id()).toUri();
         return ResponseEntity.created(uri).body(perguntaDetalhamentoDTO);
-    }
+    }*/
 
     @GetMapping("/listar")
     @Operation(summary = "Listar Perguntas", description = "Retorna uma lista paginada de todas as Perguntas", tags = {"PerguntaController"})

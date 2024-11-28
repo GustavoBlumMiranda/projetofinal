@@ -28,13 +28,13 @@ public class EtapaController {
 
     }
 
-    @PostMapping("/cadastrar")
+    /*@PostMapping("/cadastrar")
     @Operation(summary = "Cadastro de Etapa", description = "Realiza o cadastro de uma Etapa com uma lista Perguntas", tags = {"EtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<EtapaDetalhamentoDTO> cadastrarEtapa(@RequestBody @Valid EtapaCadastroDTO etapaCadastroDTO, UriComponentsBuilder uriComponentsBuilder){
         EtapaDetalhamentoDTO etapaDetalhamentoDTO = etapaService.cadastrarEtapa(etapaCadastroDTO);
         var uri = uriComponentsBuilder.path("/etapa/cadastrar/{id}").buildAndExpand(etapaDetalhamentoDTO.id()).toUri();
         return ResponseEntity.created(uri).body(etapaDetalhamentoDTO);
-    }
+    }*/
 
     @GetMapping("/listar")
     @Operation(summary = "Listagem das Etapa", description = "Realiza a listagem paginada das etapas existentes", tags = {"EtapaController"}, security = { @SecurityRequirement(name = "bearer-key") })
