@@ -54,7 +54,7 @@ public class PerguntaController {
 
     @PutMapping("/atualizar/{id}")
     @Transactional
-    @Operation(summary = "Atualizar Pergunta", description = "Atualiza os detalhes de uma Pergunta pelo ID", tags = {"PerguntaController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(summary = "Atualizar Pergunta", description = "Atualiza os detalhes de uma Pergunta pelo ID", tags = {"PerguntaController"})
     public ResponseEntity<PerguntaDetalhamentoDTO> atualizarPergunta(@RequestBody @Valid AlterarPerguntaDTO perguntaDTO) {
         PerguntaDetalhamentoDTO perguntaDetalhamentoDTO = perguntaService.editarPergunta(perguntaDTO);
         return ResponseEntity.ok(perguntaDetalhamentoDTO);
@@ -62,14 +62,14 @@ public class PerguntaController {
 
     @PutMapping("/opcaoresposta/atualizar/{id}")
     @Transactional
-    @Operation(summary = "Atualizar opcao resposta", description = "Atualiza os detalhes de uma opcao resposta pelo ID", tags = {"PerguntaController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(summary = "Atualizar opcao resposta", description = "Atualiza os detalhes de uma opcao resposta pelo ID", tags = {"PerguntaController"})
     public ResponseEntity<OpcaoRespostaDetalhamentoDTO> atualizarPergunta(@RequestBody @Valid AlterarOpcaoRespostaDTO opcaoRespostaDTO) {
         OpcaoRespostaDetalhamentoDTO opcaoRespostaDetalhamentoDTO = perguntaService.editarOpcaoResposta(opcaoRespostaDTO);
         return ResponseEntity.ok(opcaoRespostaDetalhamentoDTO);
     }
 
     @PostMapping("/responder")
-    @Operation(summary = "Responde uma pergunta", description = "Responde uma pergunta", tags = {"PerguntaController"}, security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(summary = "Responde uma pergunta", description = "Responde uma pergunta", tags = {"PerguntaController"})
     public ResponseEntity<String> responderPergunta(@RequestBody RespostaPerguntaDTO respostaPerguntaDTO) {
         return perguntaService.responderPergunta(respostaPerguntaDTO);
     }

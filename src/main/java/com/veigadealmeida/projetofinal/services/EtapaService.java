@@ -20,37 +20,12 @@ import org.springframework.stereotype.Service;
 public class EtapaService {
 
    private final EtapaRepository etapaRepository;
-   private final PerguntaRepository perguntaRepository;
    private final EtapaEmUsoRepository etapaEmUsoRepository;
 
-    public EtapaService(EtapaRepository etapaRepository, PerguntaRepository perguntaRepository, EtapaEmUsoRepository etapaEmUsoRepository){
+    public EtapaService(EtapaRepository etapaRepository, EtapaEmUsoRepository etapaEmUsoRepository){
         this.etapaRepository = etapaRepository;
-        this.perguntaRepository = perguntaRepository;
         this.etapaEmUsoRepository = etapaEmUsoRepository;
     }
-
-    /*@Transactional
-    public EtapaDetalhamentoDTO cadastrarEtapa(EtapaCadastroDTO etapaCadastroDTO) {
-        Etapa etapa = new Etapa(etapaCadastroDTO);
-        Integer ordemPergunta = 0;
-        for (PerguntaCadastroDTO perguntaCadastroDTO : etapaCadastroDTO.perguntas()) {
-            ordemPergunta++;
-            Pergunta pergunta;
-
-            if (perguntaCadastroDTO.id() != null) {
-                pergunta = perguntaRepository.findById(perguntaCadastroDTO.id())
-                        .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + perguntaCadastroDTO.id() + " não encontrada."));
-            } else {
-                pergunta = new Pergunta(perguntaCadastroDTO);
-            }
-
-            PerguntaEtapa perguntaEtapa = new PerguntaEtapa(etapa, pergunta, ordemPergunta);
-            etapa.getPerguntasEtapa().add(perguntaEtapa);
-            pergunta.getEtapas().add(perguntaEtapa);
-        }
-        etapa = etapaRepository.save(etapa);
-        return new EtapaDetalhamentoDTO(etapa);
-    }*/
 
     public EtapaDetalhamentoDTO buscar(Long id) {
         return new EtapaDetalhamentoDTO(etapaRepository.findById(id)

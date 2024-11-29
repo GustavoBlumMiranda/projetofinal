@@ -21,7 +21,8 @@ public class RespostasProjetoService {
     }
 
     public RespostaPerguntaDetalhamentoDTO buscaPorId(Long idResposta){
-        return new RespostaPerguntaDetalhamentoDTO(respostasEtapaEmUsoRepository.findById(idResposta).get());
+        return new RespostaPerguntaDetalhamentoDTO(respostasEtapaEmUsoRepository.findById(idResposta)
+                .orElseThrow(() -> new EntityNotFoundException("resposta com ID " + idResposta + " não encontrada.")));
     }
 
     public RespostasEtapaDetalhamentoDTO buscaPorEtapaEmUso(Long idEtapaEmUso){

@@ -48,7 +48,8 @@ public class PerguntaService {
     }
 
     public PerguntaDetalhamentoDTO buscaPergunta(Long id) {
-        return new PerguntaDetalhamentoDTO(perguntaRepository.findById(id).get());
+        return new PerguntaDetalhamentoDTO(perguntaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + id + " não encontrada.")));
     }
 
     @Transactional
@@ -59,11 +60,9 @@ public class PerguntaService {
 
         Usuario usuario = etapaEmUso.getUsuario();
 
-        if (usuario.getTipoUsuario() == TipoUsuarioEnum.COLABORADOR) {
-            Projeto projeto = etapaProjeto.getProjeto();
-            if (!projeto.getUsuarios().contains(usuario)) {
-                throw new IllegalStateException("Usuário do tipo COLABORADOR não está associado a este projeto.");
-            }
+        Projeto projeto = etapaProjeto.getProjeto();
+        if (!projeto.getUsuarios().contains(usuario)) {
+            throw new IllegalStateException("Usuário do tipo COLABORADOR não está associado a este projeto.");
         }
 
         if (etapaEmUso.getStatusEtapaEmUso() == StatusEnum.NAO_INICIADO) {
