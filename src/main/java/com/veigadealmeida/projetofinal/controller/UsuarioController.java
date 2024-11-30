@@ -1,5 +1,6 @@
 package com.veigadealmeida.projetofinal.controller;
 
+import com.veigadealmeida.projetofinal.domain.Usuario;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @Service
 @RestController
@@ -75,6 +78,13 @@ public class UsuarioController implements UserDetailsService {
 	public ResponseEntity<Page<UsuarioDetalhamentoDTO>> listarUsuario(@PageableDefault(sort = {"id"}) Pageable paginacao){
 		var page = usuarioService.listarUsuario(paginacao);
 		return ResponseEntity.ok(page);
+	}
+
+	@GetMapping("/listarporprojeto/{projetoId}")
+	@Operation(summary = "Listagem de Usuários Associação", description = "Realiza a listagem dos usuários que estão associados ao projeto especificado.", tags = {"UsuarioController"})
+	public ResponseEntity<List<Usuario>> listarUsuariosPorProjeto(@PathVariable Long projetoId) {
+		var retorno = usuarioService.listarPorProjeto(projetoId);
+		return ResponseEntity.ok(retorno);
 	}
 
 	@GetMapping("/listardisponiveis/{projetoId}")
