@@ -57,11 +57,11 @@ public class UsuarioService {
         return usuarioRepository.findUsuariosDisponiveisParaAssociacao(paginacao, projetoId);
     }
 
-    public List<Usuario> listarPorProjeto(Long projetoId) {
+    public List<UsuarioDetalhamentoDTO> listarPorProjeto(Long projetoId) {
         Projeto projeto =  projetoRepository.findById(projetoId)
                 .orElseThrow(() -> new ObjectNotFoundException("Id do Projeto não encontrado: " + projetoId));
 
-        return projeto.getUsuarios();
+        return projeto.getUsuarios().stream().map(UsuarioDetalhamentoDTO::new).toList();
     }
 
 

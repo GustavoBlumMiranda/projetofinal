@@ -82,7 +82,7 @@ public class UsuarioController implements UserDetailsService {
 
 	@GetMapping("/listarporprojeto/{projetoId}")
 	@Operation(summary = "Listagem de Usuários Associação", description = "Realiza a listagem dos usuários que estão associados ao projeto especificado.", tags = {"UsuarioController"})
-	public ResponseEntity<List<Usuario>> listarUsuariosPorProjeto(@PathVariable Long projetoId) {
+	public ResponseEntity<List<UsuarioDetalhamentoDTO>> listarUsuariosPorProjeto(@PathVariable Long projetoId) {
 		var retorno = usuarioService.listarPorProjeto(projetoId);
 		return ResponseEntity.ok(retorno);
 	}
