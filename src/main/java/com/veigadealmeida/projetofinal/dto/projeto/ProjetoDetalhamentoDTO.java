@@ -10,14 +10,17 @@ import java.util.stream.Collectors;
 public record ProjetoDetalhamentoDTO(
         Long id,
         String titulo,
+        Boolean possuiUsuarios,
         Date createdAt,
         Date updatedAt,
         List<EtapaDetalhamentoDTO> etapas
+
 ) {
     public ProjetoDetalhamentoDTO(Projeto projeto) {
         this(
                 projeto.getId(),
                 projeto.getTitulo(),
+                !projeto.getUsuarios().isEmpty(),
                 projeto.getCreatedAt(),
                 projeto.getUpdatedAt(),
                 projeto.getEtapasProjeto().stream()
