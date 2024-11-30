@@ -1,5 +1,6 @@
 package com.veigadealmeida.projetofinal.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioDTO;
 import com.veigadealmeida.projetofinal.dto.usuario.UsuarioEditarDTO;
 import com.veigadealmeida.projetofinal.enumerators.TipoUsuarioEnum;
@@ -42,6 +43,7 @@ public class Usuario extends BaseEntity implements UserDetails {
     private Boolean ativo;
 
     @ManyToMany(mappedBy = "usuarios")
+    @JsonIgnore
     private List<Projeto> projetos = new ArrayList<>();
 
     @Override

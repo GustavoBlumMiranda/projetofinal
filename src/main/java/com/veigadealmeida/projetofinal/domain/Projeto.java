@@ -1,5 +1,6 @@
 package com.veigadealmeida.projetofinal.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.veigadealmeida.projetofinal.dto.projeto.ProjetoCadastroDTO;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import jakarta.persistence.*;
@@ -33,6 +34,7 @@ public class Projeto extends BaseEntity{
             joinColumns = @JoinColumn(name = "projetoId"),
             inverseJoinColumns = @JoinColumn(name = "usuarioId")
     )
+    @JsonBackReference
     private List<Usuario> usuarios = new ArrayList<>();
 
     public Projeto(ProjetoCadastroDTO projetoDTO) {
