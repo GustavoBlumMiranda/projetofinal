@@ -1,6 +1,8 @@
 package com.veigadealmeida.projetofinal.repository;
 
 import com.veigadealmeida.projetofinal.domain.EtapaEmUso;
+import com.veigadealmeida.projetofinal.domain.EtapaProjeto;
+import com.veigadealmeida.projetofinal.domain.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,5 +33,7 @@ public interface EtapaEmUsoRepository extends JpaRepository<EtapaEmUso, Long> {
             "FROM EtapaEmUso eu " +
             "WHERE eu.etapaProjeto.etapa.id = :idEtapa AND eu.usuario.id IS NOT NULL")
     boolean existsByEtapaIdComUsuarioAssociado(@Param("idEtapa") Long idEtapa);
+
+    EtapaEmUso findByEtapaProjetoAndUsuario(EtapaProjeto etapaProjeto, Usuario usuario);
 }
 

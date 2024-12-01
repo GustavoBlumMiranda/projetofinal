@@ -28,12 +28,20 @@ public class PerguntaService {
     private final RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository;
     private final OpcaoRespostaRepository opcaoRespostaRepository;
     private final PerguntaEtapaRepository perguntaEtapaRepository;
-    public PerguntaService(PerguntaRepository perguntaRepository, EtapaEmUsoRepository etapaEmUsoRepository, RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository, OpcaoRespostaRepository opcaoRespostaRepository, PerguntaEtapaRepository perguntaEtapaRepository) {
+    private final ProjetoRepository projetoRepository;
+    private final EtapaProjetoRepository etapaProjetoRepository;
+    private final UsuarioRepository usuarioRepository;
+
+    public PerguntaService(PerguntaRepository perguntaRepository, EtapaEmUsoRepository etapaEmUsoRepository, RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository, OpcaoRespostaRepository opcaoRespostaRepository, PerguntaEtapaRepository perguntaEtapaRepository, ProjetoRepository projetoRepository,
+                           EtapaProjetoRepository etapaProjetoRepository, UsuarioRepository usuarioRepository) {
         this.perguntaRepository = perguntaRepository;
         this.etapaEmUsoRepository = etapaEmUsoRepository;
         this.respostasEtapaEmUsoRepository = respostasEtapaEmUsoRepository;
         this.opcaoRespostaRepository = opcaoRespostaRepository;
         this.perguntaEtapaRepository = perguntaEtapaRepository;
+        this.projetoRepository = projetoRepository;
+        this.etapaProjetoRepository = etapaProjetoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     /*@Transactional
@@ -55,10 +63,9 @@ public class PerguntaService {
     @Transactional
     public ResponseEntity<String> responderPergunta(RespostaPerguntaDTO respostaPerguntaDTO) {
         Pergunta pergunta = perguntaRepository.findById(respostaPerguntaDTO.perguntaId()).get();
-        EtapaEmUso etapaEmUso = etapaEmUsoRepository.findById(respostaPerguntaDTO.etapaEmUsoId()).get();
-        EtapaProjeto etapaProjeto = etapaEmUso.getEtapaProjeto();
-
-        Usuario usuario = etapaEmUso.getUsuario();
+        EtapaProjeto etapaProjeto = etapaProjetoRepository.findByProjetoIdAndEtapaId(respostaPerguntaDTO.idProjeto(), respostaPerguntaDTO.idEtapa());
+        Usuario usuario = usuarioRepository.findById(respostaPerguntaDTO.UsuarioId()).get();
+        EtapaEmUso etapaEmUso = etapaEmUsoRepository.findByEtapaProjetoAndUsuario(etapaProjeto, usuario);
 
         Projeto projeto = etapaProjeto.getProjeto();
         if (!projeto.getUsuarios().contains(usuario)) {

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EtapaProjetoRepository extends JpaRepository<EtapaProjeto, Long> {
 
+    EtapaProjeto findByProjetoIdAndEtapaId(Long projetoId, Long etapaId);
+
 }
