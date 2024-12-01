@@ -25,7 +25,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findAllByCpf(String cpf);
 
     @Query("SELECT u FROM Usuario u WHERE u.id NOT IN " +
-            "(SELECT p.id FROM projeto pr JOIN pr.usuarios p WHERE pr.id = :projetoId)")
+            "(SELECT p.id FROM projeto pr JOIN pr.usuarios p WHERE pr.id = :projetoId) AND u.tipoUsuario = 'COLABORADOR'")
     Page<Usuario> findUsuariosDisponiveisParaAssociacao(Pageable pageable, @Param("projetoId") Long projetoId);
 }
 

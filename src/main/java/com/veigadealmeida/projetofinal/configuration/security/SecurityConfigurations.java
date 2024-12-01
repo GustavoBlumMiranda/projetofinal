@@ -24,7 +24,7 @@ public class SecurityConfigurations {
             this.securityFilter = securityFilter;
         }
 
-   @Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.csrf().disable()
             .httpBasic().disable()
@@ -34,14 +34,22 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.POST, "/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/projeto/cadastrar").hasAnyAuthority("Administrador", "Dev")
-            .requestMatchers(HttpMethod.PUT, "/projeto/editar").hasAnyAuthority("Administrador", "Dev")
-            .requestMatchers(HttpMethod.DELETE, "/projeto/excluir/**").hasAnyAuthority("Administrador", "Dev")
+            .requestMatchers(HttpMethod.POST, "/projeto/cadastrar").hasAnyAuthority("Administrador")
+            .requestMatchers(HttpMethod.PUT, "/projeto/editar/**").hasAnyAuthority("Administrador")
+            .requestMatchers(HttpMethod.DELETE, "/projeto/excluir/**").hasAnyAuthority("Administrador")
+            .requestMatchers(HttpMethod.POST, "/pergunta/responder").hasAuthority("Colaborador")
+            .requestMatchers(HttpMethod.PUT, "/etapa/editar/**").hasAuthority("Administrador")
+            .requestMatchers(HttpMethod.PUT, "/pergunta/editar/**").hasAuthority("Administrador")
+            .requestMatchers(HttpMethod.PUT, "/pergunta/opcaoresposta/editar/**").hasAuthority("Administrador")
+            .requestMatchers(HttpMethod.POST, "/projeto/associarusuario/**").hasAnyAuthority("Administrador")
+            .requestMatchers(HttpMethod.DELETE, "/projeto/desassociar/**").hasAnyAuthority("Administrador")
+            .requestMatchers(HttpMethod.GET, "/projeto/acompanhar").hasAnyAuthority("Administrador")
+            .requestMatchers(HttpMethod.GET, "/projeto/acompanhar/ususariologado").hasAuthority("Colaborador")
             .anyRequest().authenticated() // Requer autenticação para todas as outras requisições
             .and().cors()
             .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
-}
+    }
 
 
 

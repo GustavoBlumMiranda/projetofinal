@@ -91,7 +91,7 @@ public class UsuarioController implements UserDetailsService {
 	@Operation(summary = "Listagem de Usuários Disponíveis para Associação", description = "Realiza a listagem paginada dos usuários que não estão associados ao projeto especificado.", tags = {"UsuarioController"})
 	public ResponseEntity<Page<UsuarioDetalhamentoDTO>> listarUsuariosDisponiveisParaAssociacao(@PageableDefault(sort = {"id"}) Pageable paginacao, @PathVariable Long projetoId) {
 		var page = usuarioService.listarUsuariosDisponiveisParaAssociacao(paginacao, projetoId);
-		Page<UsuarioDetalhamentoDTO> usuariosDetalhados = page.map(usuario -> new UsuarioDetalhamentoDTO(usuario));
+		Page<UsuarioDetalhamentoDTO> usuariosDetalhados = page.map(UsuarioDetalhamentoDTO::new);
 		return ResponseEntity.ok(usuariosDetalhados);
 	}
 
