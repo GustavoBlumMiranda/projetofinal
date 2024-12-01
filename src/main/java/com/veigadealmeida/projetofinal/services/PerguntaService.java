@@ -64,7 +64,7 @@ public class PerguntaService {
     public ResponseEntity<String> responderPergunta(RespostaPerguntaDTO respostaPerguntaDTO) {
         Pergunta pergunta = perguntaRepository.findById(respostaPerguntaDTO.perguntaId()).get();
         EtapaProjeto etapaProjeto = etapaProjetoRepository.findByProjetoIdAndEtapaId(respostaPerguntaDTO.idProjeto(), respostaPerguntaDTO.idEtapa());
-        Usuario usuario = usuarioRepository.findById(respostaPerguntaDTO.UsuarioId()).get();
+        Usuario usuario = usuarioRepository.findByLogin(respostaPerguntaDTO.usuarioLogin());
         EtapaEmUso etapaEmUso = etapaEmUsoRepository.findByEtapaProjetoAndUsuario(etapaProjeto, usuario);
 
         Projeto projeto = etapaProjeto.getProjeto();
