@@ -129,7 +129,7 @@ public class ProjetoService {
                                 // Cria o DTO de pergunta e resposta
                                 String respostaTexto = resposta != null && resposta.getRespondida()
                                         ? resposta.getRespostaOriginal()
-                                        : "Não respondida";
+                                        : null;
 
                                 boolean respondida = resposta != null && resposta.getRespondida();
 
