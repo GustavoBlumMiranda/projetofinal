@@ -52,6 +52,13 @@ public class ProjetoController {
         return ResponseEntity.ok(projetoDetalhamentoDTO);
     }
 
+    @GetMapping("/buscarcomresposta/{id}")
+    @Operation(summary = "Buscar um Projeto", description = "Realiza a busca de um Projeto por ID", tags = {"ProjetoController"})
+    public ResponseEntity<ProjetoRespostaDetalhadaDTO> buscarProjetoComResposta(@PathVariable(value = "id") long id){
+        ProjetoRespostaDetalhadaDTO projetoDetalhamentoDTO = projetoService.buscarComResposta(id);
+        return ResponseEntity.ok(projetoDetalhamentoDTO);
+    }
+
     @PostMapping("/associarusuario/{idProjeto}/{idUsuario}")
     @Operation(summary = "Associar Usuário ao Projeto", description = "Associa um usuário existente a um projeto existente", tags = {"ProjetoController"})
     public ResponseEntity<String> associarUsuarioAoProjeto(@PathVariable(value = "idProjeto") Long idProjeto, @PathVariable(value = "idUsuario") Long idUsuario) {

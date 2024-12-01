@@ -4,7 +4,9 @@ import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
 import com.veigadealmeida.projetofinal.domain.*;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
+import com.veigadealmeida.projetofinal.dto.etapa.EtapaRespostaDetalhadaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
+import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaRespostaDetalhadaDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
 import com.veigadealmeida.projetofinal.repository.*;
@@ -92,6 +94,59 @@ public class ProjetoService {
         return new ProjetoDetalhamentoDTO(projetoRepository.findById(id).get());
 
     }
+
+    public ProjetoRespostaDetalhadaDTO buscarComResposta(Long idProjeto) {
+        // Verifica se o projeto existe
+        Projeto projeto = projetoRepository.findById(idProjeto)
+                .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + idProjeto + " não encontrado."));
+
+        // Busca o usuário pelo ID
+        String subject = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
+        Usuario usuario = usuarioRepository.findByLogin(subject);
+
+        // Prepara as etapas detalhadas
+        List<EtapaRespostaDetalhadaDTO> etapasDetalhadas = projeto.getEtapasProjeto().stream()
+                .map(etapaProjeto -> {
+                    String tituloEtapa = etapaProjeto.getEtapa().getTitulo();
+
+                    // Busca a EtapaEmUso correspondente ao usuário e à etapa
+                    EtapaEmUso etapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuario.getId(), projeto.getId())
+                            .stream()
+                            .filter(e -> e.getEtapaProjeto().getId().equals(etapaProjeto.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalStateException("Etapa não encontrada para o usuário no projeto."));
+
+                    // Busca perguntas e respostas associadas à etapa
+                    List<PerguntaRespostaDetalhadaDTO> perguntasDetalhadas = etapaProjeto.getEtapa().getPerguntasEtapa().stream()
+                            .map(perguntaEtapa -> {
+                                Pergunta pergunta = perguntaEtapa.getPergunta();
+                                RespostasEtapaEmUso resposta = etapaEmUso.getRespostasEtapaEmUso().stream()
+                                        .filter(r -> r.getPergunta().getId().equals(pergunta.getId()))
+                                        .findFirst()
+                                        .orElse(null);
+
+                                // Cria o DTO de pergunta e resposta
+                                String respostaTexto = resposta != null && resposta.getRespondida()
+                                        ? resposta.getRespostaOriginal()
+                                        : "Não respondida";
+
+                                boolean respondida = true;
+                                if(respostaTexto.equalsIgnoreCase("Não respondida")) {
+                                    respondida = false;
+                                }
+                                return new PerguntaRespostaDetalhadaDTO(pergunta.getDescricaoPergunta(), respostaTexto, respondida);
+                            })
+                            .toList();
+
+                    // Retorna a etapa detalhada
+                    return new EtapaRespostaDetalhadaDTO(tituloEtapa, perguntasDetalhadas);
+                })
+                .toList();
+
+        // Retorna o DTO completo do projeto
+        return new ProjetoRespostaDetalhadaDTO(projeto.getTitulo(), etapasDetalhadas);
+    }
+
 
     public Page<ProjetoDetalhamentoDTO> listarProjetos(Pageable paginacao) {
         return projetoRepository.findAll(paginacao).map(ProjetoDetalhamentoDTO::new);
