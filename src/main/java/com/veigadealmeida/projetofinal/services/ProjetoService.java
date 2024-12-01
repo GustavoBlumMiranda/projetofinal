@@ -9,6 +9,7 @@ import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaRespostaDetalhadaDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
+import com.veigadealmeida.projetofinal.enumerators.TipoPerguntaEnum;
 import com.veigadealmeida.projetofinal.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -108,7 +109,7 @@ public class ProjetoService {
         List<EtapaRespostaDetalhadaDTO> etapasDetalhadas = projeto.getEtapasProjeto().stream()
                 .map(etapaProjeto -> {
                     String tituloEtapa = etapaProjeto.getEtapa().getTitulo();
-
+                    Long idEtapa = etapaProjeto.getEtapa().getId();
                     // Busca a EtapaEmUso correspondente ao usuário e à etapa
                     EtapaEmUso etapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuario.getId(), projeto.getId())
                             .stream()
@@ -130,16 +131,29 @@ public class ProjetoService {
                                         ? resposta.getRespostaOriginal()
                                         : "Não respondida";
 
-                                boolean respondida = true;
-                                if(respostaTexto.equalsIgnoreCase("Não respondida")) {
-                                    respondida = false;
-                                }
-                                return new PerguntaRespostaDetalhadaDTO(pergunta.getDescricaoPergunta(), respostaTexto, respondida);
+                                boolean respondida = resposta != null && resposta.getRespondida();
+
+                                // Prepara as opções de resposta se a pergunta for do tipo Múltipla Escolha
+                                List<String> opcoesResposta = pergunta.getTipoPergunta() == TipoPerguntaEnum.MULTIPLA_ESCOLHA
+                                        ? pergunta.getOpcoesResposta().stream()
+                                        .map(OpcaoResposta::getResposta)
+                                        .toList()
+                                        : List.of();
+
+                                // Cria o DTO de pergunta detalhada
+                                return new PerguntaRespostaDetalhadaDTO(
+                                        pergunta.getId(),
+                                        pergunta.getDescricaoPergunta(),
+                                        respostaTexto,
+                                        respondida,
+                                        pergunta.getTipoPergunta().getDescricao(),
+                                        opcoesResposta
+                                );
                             })
                             .toList();
 
                     // Retorna a etapa detalhada
-                    return new EtapaRespostaDetalhadaDTO(tituloEtapa, perguntasDetalhadas);
+                    return new EtapaRespostaDetalhadaDTO(idEtapa, tituloEtapa, perguntasDetalhadas);
                 })
                 .toList();
 
