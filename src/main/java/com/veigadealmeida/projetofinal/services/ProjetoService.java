@@ -209,7 +209,7 @@ public class ProjetoService {
     }
 
     public Page<ProjetoSimplesDetalhamentoDTO> listarProjetoPorUsuario(Pageable paginacao, Long usuarioid) {
-        if(usuarioid == null) {
+        if (usuarioid == null) {
             String subject = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
             Usuario usuario = usuarioRepository.findByLogin(subject);
             usuarioid = usuario.getId();
@@ -217,25 +217,31 @@ public class ProjetoService {
         List<Projeto> projetosAssociados = projetoRepository.findProjetosByUsuarioId(usuarioid);
         List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
 
-        for (Projeto proj : projetosAssociados){
-            List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuarioid, proj.getId());
-            geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso);
+        for (Projeto proj : projetosAssociados) {
+            for (Usuario usuario : proj.getUsuarios()) {
+                List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuario.getId(), proj.getId());
+                geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso, usuario);
+            }
         }
         return new PageImpl<>(retorno, paginacao, retorno.size());
     }
+
 
     public Page<ProjetoSimplesDetalhamentoDTO> acompanharProjetos(Pageable paginacao) {
         List<Projeto> projetosAssociados = projetoRepository.findAll();
         List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
 
-        for (Projeto proj : projetosAssociados){
-            List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByProjetoId(proj.getId());
-            geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso);
+        for (Projeto proj : projetosAssociados) {
+            for (Usuario usuario : proj.getUsuarios()) {
+                List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuario.getId(), proj.getId());
+                geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso, usuario);
+            }
         }
         return new PageImpl<>(retorno, paginacao, retorno.size());
     }
 
-    public void geraDetalhamentoProjeto(List<ProjetoSimplesDetalhamentoDTO> retorno, Projeto proj, List<EtapaEmUso> listaEtapaEmUso) {
+
+    public void geraDetalhamentoProjeto(List<ProjetoSimplesDetalhamentoDTO> retorno, Projeto proj, List<EtapaEmUso> listaEtapaEmUso, Usuario usuario) {
         if (listaEtapaEmUso.isEmpty()) {
             return;
         }
@@ -248,15 +254,17 @@ public class ProjetoService {
         boolean primeiroNaoIniciado = listaEtapaEmUso.get(0).getStatusEtapaEmUso().equals(StatusEnum.NAO_INICIADO);
         Date dataInicio = listaEtapaEmUso.get(0).getCreatedAt();
         Date datafim = todasConcluidas ? listaEtapaEmUso.get(listaEtapaEmUso.size() - 1).getUpdatedAt() : null;
-        if(todasConcluidas){
+        if (todasConcluidas) {
             status = "CONCLUÍDO";
         }
-        if(primeiroNaoIniciado){
+        if (primeiroNaoIniciado) {
             status = "NÃO INICIADO";
             dataInicio = null;
         }
-        retorno.add(new ProjetoSimplesDetalhamentoDTO(proj, status, concluidos, dataInicio, datafim));
+        retorno.add(new ProjetoSimplesDetalhamentoDTO(proj, status, concluidos, dataInicio, datafim, usuario));
     }
+
+
 
     @Transactional
     public AssocieacoesProjetoDetalhamentoDTO desassociarUsuario(Long projetoId, Long usuarioId) {
