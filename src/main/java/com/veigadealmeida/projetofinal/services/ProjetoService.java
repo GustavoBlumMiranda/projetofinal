@@ -214,17 +214,27 @@ public class ProjetoService {
             Usuario usuario = usuarioRepository.findByLogin(subject);
             usuarioid = usuario.getId();
         }
+
+        // Busca apenas os projetos associados ao usuário fornecido
         List<Projeto> projetosAssociados = projetoRepository.findProjetosByUsuarioId(usuarioid);
         List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
 
         for (Projeto proj : projetosAssociados) {
-            for (Usuario usuario : proj.getUsuarios()) {
-                List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuario.getId(), proj.getId());
-                geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso, usuario);
+            // Filtra para garantir que apenas os dados do usuário especificado sejam incluídos
+            Usuario usuarioEspecifico = proj.getUsuarios().stream()
+                    .filter(usuario -> usuario.getId().equals(usuario.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (usuarioEspecifico != null) {
+                List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuarioEspecifico.getId(), proj.getId());
+                geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso, usuarioEspecifico);
             }
         }
+
         return new PageImpl<>(retorno, paginacao, retorno.size());
     }
+
 
 
     public Page<ProjetoSimplesDetalhamentoDTO> acompanharProjetos(Pageable paginacao) {
