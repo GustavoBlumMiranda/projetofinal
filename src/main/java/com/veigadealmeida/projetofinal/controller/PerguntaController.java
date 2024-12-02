@@ -71,7 +71,7 @@ public class PerguntaController {
     @PostMapping("/responder")
     @Operation(summary = "Responde uma pergunta", description = "Responde uma pergunta", tags = {"PerguntaController"})
     public ResponseEntity<String> responderPergunta(@RequestBody RespostaPerguntaDTO respostaPerguntaDTO) {
-        return perguntaService.responderPergunta(respostaPerguntaDTO);
+        return ResponseEntity.ok("{\"message\": \"" + perguntaService.responderPergunta(respostaPerguntaDTO) + "\"}");
     }
 
 
