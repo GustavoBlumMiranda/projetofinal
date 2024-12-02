@@ -43,12 +43,6 @@ public class EtapaService {
         Etapa etapa = etapaRepository.findById(alteraEtapaDTO.id())
                 .orElseThrow(() -> new EntityNotFoundException("Etapa com ID " + alteraEtapaDTO.id() + " não encontrada."));
 
-        boolean possuiUsuariosAssociados = etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(etapa.getId());
-
-        if (possuiUsuariosAssociados) {
-            throw new IllegalStateException("Etapas com usuários associados não podem ser editadas.");
-        }
-
         etapa.setTitulo(alteraEtapaDTO.titulo());
         etapa = etapaRepository.save(etapa);
 

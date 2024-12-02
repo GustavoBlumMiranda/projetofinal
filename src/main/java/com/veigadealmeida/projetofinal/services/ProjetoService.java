@@ -173,10 +173,6 @@ public class ProjetoService {
         Projeto projeto = projetoRepository.findById(alteraProjetoDTO.id())
                 .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + alteraProjetoDTO.id() + " não encontrado."));
 
-        if (projeto.getUsuarios() != null && !projeto.getUsuarios().isEmpty()) {
-            throw new IllegalStateException("Projetos com usuários associados não podem ser editados.");
-        }
-
         projeto.setTitulo(alteraProjetoDTO.titulo());
         projetoRepository.save(projeto);
         return new ProjetoDetalhamentoDTO(projeto);

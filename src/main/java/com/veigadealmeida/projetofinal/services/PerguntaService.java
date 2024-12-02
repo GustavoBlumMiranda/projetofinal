@@ -101,13 +101,6 @@ public class PerguntaService {
         Pergunta pergunta = perguntaRepository.findById(alterarPerguntaDTO.id())
                 .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + alterarPerguntaDTO.id() + " não encontrada."));
 
-        boolean usuariosAssociados = pergunta.getEtapas().stream()
-                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(perguntaEtapa.getEtapa().getId()));
-
-        if (usuariosAssociados) {
-            throw new IllegalStateException("Perguntas associadas a etapas com usuários não podem ser editadas.");
-        }
-
         pergunta.setDescricaoPergunta(alterarPerguntaDTO.descricaoPergunta());
 
         perguntaRepository.save(pergunta);
@@ -118,14 +111,6 @@ public class PerguntaService {
     public OpcaoRespostaDetalhamentoDTO editarOpcaoResposta(AlterarOpcaoRespostaDTO alterarOpcaoRespostaDTO) {
         OpcaoResposta opcaoResposta = opcaoRespostaRepository.findById(alterarOpcaoRespostaDTO.opcaoRespostaId())
                 .orElseThrow(() -> new EntityNotFoundException("OpcaoResposta com ID " + alterarOpcaoRespostaDTO.opcaoRespostaId() + " não encontrada."));
-
-        Pergunta pergunta = opcaoResposta.getPergunta();
-        boolean usuariosAssociados = pergunta.getEtapas().stream()
-                .anyMatch(perguntaEtapa -> etapaEmUsoRepository.existsByEtapaIdComUsuarioAssociado(perguntaEtapa.getEtapa().getId()));
-
-        if (usuariosAssociados) {
-            throw new IllegalStateException("Opções de resposta associadas a etapas com usuários não podem ser editadas.");
-        }
 
         opcaoResposta.setResposta(alterarOpcaoRespostaDTO.opcaoResposta());
 
