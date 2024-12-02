@@ -52,10 +52,10 @@ public class ProjetoController {
         return ResponseEntity.ok(projetoDetalhamentoDTO);
     }
 
-    @GetMapping("/buscarcomresposta/{id}")
+    @GetMapping({"/buscarcomresposta/{idProjeto}/{idUsuario}", "/buscarcomresposta/{idProjeto}"})
     @Operation(summary = "Buscar um Projeto", description = "Realiza a busca de um Projeto por ID", tags = {"ProjetoController"})
-    public ResponseEntity<ProjetoRespostaDetalhadaDTO> buscarProjetoComResposta(@PathVariable(value = "id") long id){
-        ProjetoRespostaDetalhadaDTO projetoDetalhamentoDTO = projetoService.buscarComResposta(id);
+    public ResponseEntity<ProjetoRespostaDetalhadaDTO> buscarProjetoComResposta(@PathVariable(value = "idProjeto") long idProjeto, @PathVariable(value = "idUsuario", required = false) Long idUsuario){
+        ProjetoRespostaDetalhadaDTO projetoDetalhamentoDTO = projetoService.buscarComResposta(idProjeto, idUsuario);
         return ResponseEntity.ok(projetoDetalhamentoDTO);
     }
 

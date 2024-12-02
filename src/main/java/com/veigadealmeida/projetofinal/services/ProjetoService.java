@@ -97,16 +97,18 @@ public class ProjetoService {
 
     }
 
-    public ProjetoRespostaDetalhadaDTO buscarComResposta(Long idProjeto) {
-        // Verifica se o projeto existe
+    public ProjetoRespostaDetalhadaDTO buscarComResposta(Long idProjeto, Long idUsuario) {
         Projeto projeto = projetoRepository.findById(idProjeto)
                 .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + idProjeto + " não encontrado."));
+        Usuario usuario;
+        if(idUsuario != null){
+            usuario = usuarioRepository.findById(idUsuario)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + idUsuario + " não encontrado."));
+        } else {
+            String subject = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
+            usuario = usuarioRepository.findByLogin(subject);
+        }
 
-        // Busca o usuário pelo ID
-        String subject = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
-        Usuario usuario = usuarioRepository.findByLogin(subject);
-
-        // Prepara as etapas detalhadas
         List<EtapaRespostaDetalhadaDTO> etapasDetalhadas = projeto.getEtapasProjeto().stream()
                 .map(etapaProjeto -> {
                     String tituloEtapa = etapaProjeto.getEtapa().getTitulo();
@@ -118,7 +120,6 @@ public class ProjetoService {
                             .findFirst()
                             .orElseThrow(() -> new IllegalStateException("Etapa não encontrada para o usuário no projeto."));
 
-                    // Busca perguntas e respostas associadas à etapa
                     List<PerguntaRespostaDetalhadaDTO> perguntasDetalhadas = etapaProjeto.getEtapa().getPerguntasEtapa().stream()
                             .map(perguntaEtapa -> {
                                 Pergunta pergunta = perguntaEtapa.getPergunta();
@@ -127,14 +128,12 @@ public class ProjetoService {
                                         .findFirst()
                                         .orElse(null);
 
-                                // Cria o DTO de pergunta e resposta
                                 String respostaTexto = resposta != null && resposta.getRespondida()
                                         ? resposta.getRespostaOriginal()
                                         : null;
 
                                 boolean respondida = resposta != null && resposta.getRespondida();
 
-                                // Prepara as opções de resposta se a pergunta for do tipo Múltipla Escolha
                                 List<OpcaoRespostaDetalhamentoDTO> opcoesResposta = pergunta.getTipoPergunta() == TipoPerguntaEnum.MULTIPLA_ESCOLHA
                                         ? pergunta.getOpcoesResposta().stream()
                                         .map(OpcaoRespostaDetalhamentoDTO::new)
@@ -152,12 +151,10 @@ public class ProjetoService {
                             })
                             .toList();
 
-                    // Retorna a etapa detalhada
                     return new EtapaRespostaDetalhadaDTO(idEtapa, tituloEtapa, perguntasDetalhadas);
                 })
                 .toList();
 
-        // Retorna o DTO completo do projeto
         return new ProjetoRespostaDetalhadaDTO(projeto.getTitulo(), etapasDetalhadas);
     }
 
