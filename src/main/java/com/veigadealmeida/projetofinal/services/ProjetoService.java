@@ -5,6 +5,7 @@ import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoun
 import com.veigadealmeida.projetofinal.domain.*;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaRespostaDetalhadaDTO;
+import com.veigadealmeida.projetofinal.dto.opcaoresposta.OpcaoRespostaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaRespostaDetalhadaDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
@@ -134,13 +135,12 @@ public class ProjetoService {
                                 boolean respondida = resposta != null && resposta.getRespondida();
 
                                 // Prepara as opções de resposta se a pergunta for do tipo Múltipla Escolha
-                                List<String> opcoesResposta = pergunta.getTipoPergunta() == TipoPerguntaEnum.MULTIPLA_ESCOLHA
+                                List<OpcaoRespostaDetalhamentoDTO> opcoesResposta = pergunta.getTipoPergunta() == TipoPerguntaEnum.MULTIPLA_ESCOLHA
                                         ? pergunta.getOpcoesResposta().stream()
-                                        .map(OpcaoResposta::getResposta)
+                                        .map(OpcaoRespostaDetalhamentoDTO::new)
                                         .toList()
                                         : List.of();
 
-                                // Cria o DTO de pergunta detalhada
                                 return new PerguntaRespostaDetalhadaDTO(
                                         pergunta.getId(),
                                         pergunta.getDescricaoPergunta(),

@@ -1,5 +1,7 @@
 package com.veigadealmeida.projetofinal.dto.pergunta;
 
+import com.veigadealmeida.projetofinal.dto.opcaoresposta.OpcaoRespostaDetalhamentoDTO;
+
 import java.util.List;
 
 public record PerguntaRespostaDetalhadaDTO(
@@ -8,5 +10,5 @@ public record PerguntaRespostaDetalhadaDTO(
         String resposta,
         Boolean respondida,
         String tipoPergunta,
-        List<String> opcoesResposta
+        List<OpcaoRespostaDetalhamentoDTO> opcoesResposta
 ) {}
