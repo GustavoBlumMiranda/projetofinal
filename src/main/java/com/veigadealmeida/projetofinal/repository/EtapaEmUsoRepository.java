@@ -35,5 +35,7 @@ public interface EtapaEmUsoRepository extends JpaRepository<EtapaEmUso, Long> {
     boolean existsByEtapaIdComUsuarioAssociado(@Param("idEtapa") Long idEtapa);
 
     EtapaEmUso findByEtapaProjetoAndUsuario(EtapaProjeto etapaProjeto, Usuario usuario);
+
+    List<EtapaEmUso> findAllByEtapaProjeto(EtapaProjeto etapaProjeto);
 }
 

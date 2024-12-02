@@ -35,10 +35,11 @@ public class ProjetoService {
     private final TokenJWTService tokenJWTService;
     private final EtapaProjetoRepository etapaProjetoRepository;
     private final PerguntaEtapaRepository perguntaEtapaRepository;
+    private final RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository;
 
     public ProjetoService(ProjetoRepository projetoRepository, EtapaRepository etapaRepository, PerguntaRepository perguntaRepository,
                           UsuarioRepository usuarioRepository,EtapaEmUsoRepository etapaEmUsoRepository, TokenJWTService tokenJWTService,
-                          EtapaProjetoRepository etapaProjetoRepository, PerguntaEtapaRepository perguntaEtapaRepository) {
+                          EtapaProjetoRepository etapaProjetoRepository, PerguntaEtapaRepository perguntaEtapaRepository, RespostasEtapaEmUsoRepository respostasEtapaEmUsoRepository) {
         this.projetoRepository = projetoRepository;
         this.etapaRepository = etapaRepository;
         this.perguntaRepository = perguntaRepository;
@@ -47,6 +48,7 @@ public class ProjetoService {
         this.tokenJWTService = tokenJWTService;
         this.etapaProjetoRepository = etapaProjetoRepository;
         this.perguntaEtapaRepository = perguntaEtapaRepository;
+        this.respostasEtapaEmUsoRepository = respostasEtapaEmUsoRepository;
     }
 
     @Transactional
@@ -286,8 +288,17 @@ public class ProjetoService {
             Projeto projeto = projetoRepository.findById(projetoId)
                     .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + projetoId + " não encontrado."));
             validarProjetoParaExclusao(projeto);
+
             for (EtapaProjeto etapaProjeto : projeto.getEtapasProjeto()) {
                 Etapa etapa = etapaProjeto.getEtapa();
+
+
+                List<EtapaEmUso> etapasEmUso = etapaEmUsoRepository.findAllByEtapaProjeto(etapaProjeto);
+                for (EtapaEmUso etapaEmUso : etapasEmUso) {
+
+                    respostasEtapaEmUsoRepository.deleteAll(etapaEmUso.getRespostasEtapaEmUso());
+                    etapaEmUsoRepository.delete(etapaEmUso);
+                }
 
                 etapaProjetoRepository.delete(etapaProjeto);
 
@@ -316,6 +327,7 @@ public class ProjetoService {
             throw new IllegalStateException("Erro ao excluir o projeto. Operação abortada.", e);
         }
     }
+
 
 
     @Transactional
