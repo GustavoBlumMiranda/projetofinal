@@ -12,10 +12,6 @@ import java.util.List;
 
 @Repository
 public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
-    @Query("SELECT p FROM projeto p " +
-            "JOIN p.usuarios u " +
-            "WHERE u.id = :usuarioId")
-    List<Projeto> findProjetosByUsuarioId(@Param("usuarioId") Long usuarioId);
 
     Page<Projeto> findAllByUsuariosIsNull(Pageable paginacao);
 }

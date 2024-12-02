@@ -28,4 +28,9 @@ public class OpcaoResposta extends BaseEntity {
         this.pergunta = pergunta;
     }
 
+    public void atualizarResposta(String novaResposta) {
+        this.resposta = novaResposta;
+    }
+
+
 }

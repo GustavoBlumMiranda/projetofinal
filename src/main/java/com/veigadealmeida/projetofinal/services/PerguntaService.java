@@ -2,14 +2,9 @@ package com.veigadealmeida.projetofinal.services;
 import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
 import com.veigadealmeida.projetofinal.domain.Pergunta;
 import com.veigadealmeida.projetofinal.domain.*;
-import com.veigadealmeida.projetofinal.dto.opcaoresposta.AlterarOpcaoRespostaDTO;
-import com.veigadealmeida.projetofinal.dto.opcaoresposta.OpcaoRespostaDetalhamentoDTO;
-import com.veigadealmeida.projetofinal.dto.pergunta.AlterarPerguntaDTO;
-import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaDetalhamentoDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.RespostaPerguntaDTO;
 import com.veigadealmeida.projetofinal.enumerators.StatusEnum;
-import com.veigadealmeida.projetofinal.enumerators.TipoUsuarioEnum;
 import com.veigadealmeida.projetofinal.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,13 +38,6 @@ public class PerguntaService {
         this.etapaProjetoRepository = etapaProjetoRepository;
         this.usuarioRepository = usuarioRepository;
     }
-
-    /*@Transactional
-    public PerguntaDetalhamentoDTO cadastrarPergunta(PerguntaDTO perguntaDTO) {
-        Pergunta pergunta = new Pergunta(perguntaDTO);
-        pergunta = perguntaRepository.save(pergunta);
-        return new PerguntaDetalhamentoDTO(pergunta);
-    }*/
 
     public Page<PerguntaDetalhamentoDTO> listarPerguntas(Pageable paginacao) {
         return perguntaRepository.findAll(paginacao).map(PerguntaDetalhamentoDTO::new);
@@ -94,34 +82,4 @@ public class PerguntaService {
 
         return ResponseEntity.ok("Pergunta Respondida com sucesso!");
     }
-
-
-    @Transactional
-    public PerguntaDetalhamentoDTO editarPergunta(AlterarPerguntaDTO alterarPerguntaDTO) {
-        Pergunta pergunta = perguntaRepository.findById(alterarPerguntaDTO.id())
-                .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + alterarPerguntaDTO.id() + " não encontrada."));
-
-        pergunta.setDescricaoPergunta(alterarPerguntaDTO.descricaoPergunta());
-
-        perguntaRepository.save(pergunta);
-        return new PerguntaDetalhamentoDTO(pergunta);
-    }
-
-    @Transactional
-    public OpcaoRespostaDetalhamentoDTO editarOpcaoResposta(AlterarOpcaoRespostaDTO alterarOpcaoRespostaDTO) {
-        OpcaoResposta opcaoResposta = opcaoRespostaRepository.findById(alterarOpcaoRespostaDTO.opcaoRespostaId())
-                .orElseThrow(() -> new EntityNotFoundException("OpcaoResposta com ID " + alterarOpcaoRespostaDTO.opcaoRespostaId() + " não encontrada."));
-
-        opcaoResposta.setResposta(alterarOpcaoRespostaDTO.opcaoResposta());
-
-        opcaoRespostaRepository.save(opcaoResposta);
-        return new OpcaoRespostaDetalhamentoDTO(opcaoResposta);
-    }
-
-
-
-
-
-
-
 }

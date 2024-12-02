@@ -34,15 +34,6 @@ public class Pergunta extends BaseEntity{
     @OneToMany(mappedBy = "pergunta", orphanRemoval = false)
     private List<PerguntaEtapa> etapas = new ArrayList<>();
 
-    public Pergunta(PerguntaDTO perguntaDTO){
-        this.descricaoPergunta = perguntaDTO.descricaoPergunta();
-        this.tipoPergunta = TipoPerguntaEnum.valueOf(perguntaDTO.tipoPergunta().toUpperCase());
-        if(tipoPergunta == TipoPerguntaEnum.MULTIPLA_ESCOLHA){
-            this.opcoesResposta = perguntaDTO.opcoesResposta().stream()
-                    .map(opcaoRespostaDTO -> new OpcaoResposta(opcaoRespostaDTO, this))
-                    .toList();
-        }
-    }
 
     public Pergunta(PerguntaCadastroDTO perguntaDTO){
         this.descricaoPergunta = perguntaDTO.descricaoPergunta();
@@ -54,8 +45,9 @@ public class Pergunta extends BaseEntity{
         }
     }
 
-    public Pergunta(Long id) {
-        this.id = id;
+    public void atualizarDescricao(String novaDescricao) {
+        this.descricaoPergunta = novaDescricao;
     }
 
-  }
+
+}

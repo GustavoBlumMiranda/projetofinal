@@ -31,4 +31,8 @@ public class Etapa extends BaseEntity{
         this.titulo = etapaCadastroDTO.nomeEtapa();
     }
 
+    public void atualizarTitulo(String novoTitulo) {
+        this.titulo = novoTitulo;
+    }
+
 }

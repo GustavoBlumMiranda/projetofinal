@@ -3,9 +3,12 @@ package com.veigadealmeida.projetofinal.services;
 import com.veigadealmeida.projetofinal.configuration.security.TokenJWTService;
 import com.veigadealmeida.projetofinal.controller.customexceptions.EntityNotFoundException;
 import com.veigadealmeida.projetofinal.domain.*;
+import com.veigadealmeida.projetofinal.dto.etapa.EditarEtapaDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.etapa.EtapaRespostaDetalhadaDTO;
+import com.veigadealmeida.projetofinal.dto.opcaoresposta.EditarOpcaoRespostaDTO;
 import com.veigadealmeida.projetofinal.dto.opcaoresposta.OpcaoRespostaDetalhamentoDTO;
+import com.veigadealmeida.projetofinal.dto.pergunta.EditarPerguntaDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaCadastroDTO;
 import com.veigadealmeida.projetofinal.dto.pergunta.PerguntaRespostaDetalhadaDTO;
 import com.veigadealmeida.projetofinal.dto.projeto.*;
@@ -171,14 +174,41 @@ public class ProjetoService {
     }
 
     @Transactional
-    public ProjetoDetalhamentoDTO editarProjeto(AlteraProjetoDTO alteraProjetoDTO) {
-        Projeto projeto = projetoRepository.findById(alteraProjetoDTO.id())
-                .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + alteraProjetoDTO.id() + " não encontrado."));
+    public ProjetoDetalhamentoDTO editarProjeto(EditarProjetoDTO editarProjetoDTO) {
+        Projeto projeto = projetoRepository.findById(editarProjetoDTO.id())
+                .orElseThrow(() -> new EntityNotFoundException("Projeto com ID " + editarProjetoDTO.id() + " não encontrado."));
 
-        projeto.setTitulo(alteraProjetoDTO.titulo());
+        projeto.setTitulo(editarProjetoDTO.titulo());
+
+        for (EditarEtapaDTO etapaDTO : editarProjetoDTO.etapas()) {
+            Etapa etapa = etapaRepository.findById(etapaDTO.id())
+                    .orElseThrow(() -> new EntityNotFoundException("Etapa com ID " + etapaDTO.id() + " não encontrada."));
+
+            etapa.atualizarTitulo(etapaDTO.titulo());
+
+            for (EditarPerguntaDTO perguntaDTO : etapaDTO.perguntas()) {
+                Pergunta pergunta = perguntaRepository.findById(perguntaDTO.id())
+                        .orElseThrow(() -> new EntityNotFoundException("Pergunta com ID " + perguntaDTO.id() + " não encontrada."));
+
+                pergunta.atualizarDescricao(perguntaDTO.descricaoPergunta());
+
+                if (perguntaDTO.opcoesResposta() != null) {
+                    for (EditarOpcaoRespostaDTO opcaoRespostaDTO : perguntaDTO.opcoesResposta()) {
+                        OpcaoResposta opcaoResposta = pergunta.getOpcoesResposta().stream()
+                                .filter(opcao -> opcao.getId().equals(opcaoRespostaDTO.id()))
+                                .findFirst()
+                                .orElseThrow(() -> new EntityNotFoundException("Opção de resposta com ID " + opcaoRespostaDTO.id() + " não encontrada."));
+
+                        opcaoResposta.atualizarResposta(opcaoRespostaDTO.opcaoResposta());
+                    }
+                }
+            }
+        }
+
         projetoRepository.save(projeto);
         return new ProjetoDetalhamentoDTO(projeto);
     }
+
 
     @Transactional
     public ResponseEntity<String> associarUsuarioAoProjeto(Long projetoId, Long usuarioId) {
