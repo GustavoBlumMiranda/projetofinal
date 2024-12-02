@@ -209,26 +209,26 @@ public class ProjetoService {
     }
 
     public Page<ProjetoSimplesDetalhamentoDTO> listarProjetoPorUsuario(Pageable paginacao, Long usuarioid) {
+        Usuario usuario;
         if (usuarioid == null) {
             String subject = tokenJWTService.getSubject(TokenJWTService.getBearerTokenHeader());
-            Usuario usuario = usuarioRepository.findByLogin(subject);
-            usuarioid = usuario.getId();
+            usuario = usuarioRepository.findByLogin(subject);
+        }else{
+            usuario = usuarioRepository.findById(usuarioid)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + usuarioid + " não encontrado."));
         }
 
         // Busca apenas os projetos associados ao usuário fornecido
-        List<Projeto> projetosAssociados = projetoRepository.findProjetosByUsuarioId(usuarioid);
+        List<Projeto> projetosAssociados = usuario.getProjetos();
         List<ProjetoSimplesDetalhamentoDTO> retorno = new ArrayList<>();
 
         for (Projeto proj : projetosAssociados) {
             // Filtra para garantir que apenas os dados do usuário especificado sejam incluídos
-            Usuario usuarioEspecifico = proj.getUsuarios().stream()
-                    .filter(usuario -> usuario.getId().equals(usuario.getId()))
-                    .findFirst()
-                    .orElse(null);
 
-            if (usuarioEspecifico != null) {
-                List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuarioEspecifico.getId(), proj.getId());
-                geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso, usuarioEspecifico);
+
+            if (usuario != null) {
+                List<EtapaEmUso> listaEtapaEmUso = etapaEmUsoRepository.findByUsuarioIdAndProjetoId(usuario.getId(), proj.getId());
+                geraDetalhamentoProjeto(retorno, proj, listaEtapaEmUso, usuario);
             }
         }
 
