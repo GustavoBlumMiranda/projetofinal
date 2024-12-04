@@ -1,4 +1,4 @@
 package com.veigadealmeida.projetofinal.dto.opcaoresposta;
 
-public record EditarOpcaoRespostaDTO(Long id, String opcaoResposta) {
+public record EditarOpcaoRespostaDTO(Long id, String descricao) {
 }
